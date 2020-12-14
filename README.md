@@ -23,13 +23,14 @@ their essential options. Save-As to a different name.
 Some columns are commented to further define their purpose.  
 Here's a little more already filled in.  
 
-![Spreadsheet](images/layout3.png)
+![Spreadsheet](images/layout2.png)
 
 This sheet to serves as a guide for filling in the cells for each widget.
 
-![Spreadsheet](images/layout2.png)
+![Spreadsheet](images/layout3.png)
 
-Construct menus and copy the rows into the `layout` sheet.
+This sheet called `menus` is an example of how to fill out a menu system  
+in the `layout` sheet.
 
 ![Spreadsheet](images/layout4.png)
 
@@ -80,6 +81,27 @@ Unless one has been coding in tkinter for many years, and tkinter syntax has bec
 second nature, this tkauto process does serve its goal of speeding up Python-Tkinter  
 application development.  
 
+Currently these widgits are supported:  
+button
+entry
+label
+scrollx
+scrolly
+list
+text
+check
+radio  
+spin
+options
+combo
+notebook
+geometry
+progress  
+beginmenu endmenu
+messagebox
+filedialog
+popup
+clip
+
+
 ---
-
-
