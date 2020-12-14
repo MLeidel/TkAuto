@@ -1,5 +1,3 @@
-Template and Spreadsheet driven tkinter-design-code generator
-
 # TkAuto
 
 TkAuto is a system for rapidly designing and coding a GUI desktop
@@ -31,6 +29,9 @@ This sheet to serves as a guide for filling in the cells for each widget.
 
 ![Spreadsheet](images/layout2.png)
 
+Construct menus and copy the rows into the `layout` sheet.
+
+![Spreadsheet](images/layout4.png)
 
 ## Dev Process in a Nutshell
 1. **Create a layout with Excel and save to `layout.xlsx`**  
