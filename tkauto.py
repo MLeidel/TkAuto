@@ -287,7 +287,7 @@ for rownum in range(3, sheet.max_row + 1):  # loop through each row
             print("\n\nMISSING list object FOR SCROLLBAR WIDGET\n\n")
             sys.exit()
         prt(line.format(flds[var], flds[com]))
-        line = "self.{0}.grid(row={1}, column={2}{3}{4}{5})  # use N+S+E"
+        line = "self.{0}.grid(row={1}, column={2}{3}{4}{5})  # use nse"
         prt(line.format(flds[var], flds[row],
                         flds[col], rowspan, colspan, sticky))
         line = "self.{0}['yscrollcommand'] = self.{1}.set\n"
@@ -397,15 +397,15 @@ for rownum in range(3, sheet.max_row + 1):  # loop through each row
         line = '''
         # lframe = LabelFrame(self, text="text",
         #                     width=100, height=100)
-        # lframe.grid(row=1, column=1, sticky=N+S+E+W)
+        # lframe.grid(row=1, column=1, sticky='nsew')
         #
         # fram = Frame(self, width=100, height=100)
-        # fram.grid(row=1, column=1, sticky=N+S+E+W)
+        # fram.grid(row=1, column=1, sticky='nsew')
         '''
         prt(line + "\n")
 
     # MESSAGEBOX
-    elif flds[wgt].lower().startswith("message"):
+    elif flds[wgt].lower() == "messagebox":
         line = '''
         # from tkinter import messagebox
         # messagebox.showerror("Error", "Error message")
@@ -429,6 +429,14 @@ for rownum in range(3, sheet.max_row + 1):  # loop through each row
         #             title = "Save file",
         #             filetypes = (("jpeg files","*.jpg"),("all files","*.*")))'''
         prt(line + "\n")
+
+    # MESSAGE
+    elif flds[wgt].lower() == "message":
+        line = "{0} = Message(self, text='{1}'{2})"
+        prt(line.format(flds[var], flds[txt], attribs))
+        line = "{0}.grid(row={1}, column={2}{3}{4}{5})\n"
+        prt(line.format(flds[var], flds[row],
+                        flds[col], rowspan, colspan, sticky))
 
     # POPUP MENU
     elif flds[wgt].lower().startswith("pop"):
