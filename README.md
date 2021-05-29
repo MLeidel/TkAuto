@@ -7,7 +7,8 @@ TkAuto is a Python program that uses specs from a spread-sheet
 to generate Python-tkinter code - the basis for a GUI app.
 
 TkAuto uses an Excel spreadsheet, a Python-tkinter template, and  
-the tkinter grid layout to help get the app layout coded quickly.
+the tkinter grid layout to help get the app layout coded and  
+tested fast.
 
 
 ## Overview
