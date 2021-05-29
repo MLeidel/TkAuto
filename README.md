@@ -1,12 +1,10 @@
 # TkAuto
 
-Tkinter is a fast and time tested GUI module for Python.  
-Tkinter lacks some of the 'high-end' features found in newer  
-packages like Qt and Gtk3. Still tkinter allows you to put  
-together a solid app vary quickly.
+"tkinter" is a useful Python module for creating GUI  
+desktop applications or small utilities.
 
-TkAuto is a 'system' I built to speed up the tkinter coding  
-process.
+TkAuto is a Python program that uses specs from a spread-sheet  
+to generate Python-tkinter code - the basis for a GUI app.
 
 TkAuto uses an Excel spreadsheet, a Python-tkinter template, and  
 the tkinter grid layout to help get the app layout coded quickly.
