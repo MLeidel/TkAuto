@@ -3,8 +3,8 @@ tkauto.py
 Python console program
 Author: Michael Leidel
 Description:
-Builds a Python tkinter application shell from an xlsx file (layout.xlsx)
-with these columns:
+Builds a Python tkinter application shell from an
+xlsx file (layout_tpl.xlsx) with these columns:
 Widget, Variable, Text, Command/Textvariable, Row, Column, Rowspan, Colspan, Sticky, other attr
 '''
 import os
@@ -12,8 +12,9 @@ import sys
 import argparse
 import openpyxl
 
-# path for tkauto_tpl.py code template
-TPLPATH = "/home/ml/apps/python/projects/ttkauto/"  # change as desired
+# tkauto_tpl.py code template must be in same directory as this script
+p = os.path.realpath(__file__)
+TPLPATH = os.path.dirname(p) + "/"
 
 parser = argparse.ArgumentParser(description='tkauto build Python tkinter GUI')
 parser.add_argument('-o', dest='outfile', action='store',
@@ -146,11 +147,16 @@ flds = []
 callbacks = []
 domenu = False
 
-
-for rownum in range(3, sheet.max_row + 1):  # loop through each row
+#
+rownum = 3
+while(True):
+    # nothing in col 1 end the loop
+    if sheet.cell(row=rownum, column=1).value is None:
+        break
 
     flds.clear()  # clear list
     flds.append("nop")  # zero element not used
+
     # load up the flds list with this row's columns values
     for c in range(1, 11):  # columns align with list index
         val = sheet.cell(row=rownum, column=c).value
@@ -226,10 +232,12 @@ for rownum in range(3, sheet.max_row + 1):  # loop through each row
         line = '''
         # efont = Font(family="Helvetica", size=14)
         # self.EDITOR.configure(font=efont)
-        # self.EDITOR.config(wrap = "word", # wrap = NONE
-        #        undo = True, # Tk 8.4
-        #        width = 80,
-        #        tabs = (efont.measure(' ' * 4),))
+        # self.EDITOR.config(wrap="word", # wrap=NONE
+        #        undo=True, # Tk 8.4
+        #        width=50,
+        #        height=12,
+        #        insertbackground='#000',   # cursor color
+        #        tabs=(efont.measure(' ' * 4),))
         # self.EDITOR.focus()
         ## basic handler commands #
         # .get("1.0", END)
@@ -248,7 +256,7 @@ for rownum in range(3, sheet.max_row + 1):  # loop through each row
                         flds[col], rowspan, colspan, sticky))
 
         line = '''
-        # self.LISTBOX.bind("<Double-Button-1>", self.on_dblclick_list)
+        # self.LISTBOX.bind("<<ListboxSelect>>", self.on_select_list)
         # for i in range(100):
         #     self.LISTBOX.insert(i, str(i) + "Item")'''
         prt(line)
@@ -256,7 +264,7 @@ for rownum in range(3, sheet.max_row + 1):  # loop through each row
         line = '''
     ## Handler for List selection
     ## Make this a class method
-    # def on_dblclick_list(self, event):
+    # def on_select_list(self, event):
     #     list_item = self.LISTBOX.curselection()
     #     fp = self.LISTBOX.get(list_item[0])
     #     print(str(fp) + " --> " + str(list_item[0]) +
@@ -375,20 +383,20 @@ for rownum in range(3, sheet.max_row + 1):  # loop through each row
         prt(line.format(flds[var]))
         line = "tab3 = Frame({0})"
         prt(line.format(flds[var]))
-        line = "{0}.add(tab1, text = 'tab 1')"
+        line = "{0}.add(tab1, text='tab 1')"
         prt(line.format(flds[var]))
-        line = "{0}.add(tab2, text = 'tab 2')"
+        line = "{0}.add(tab2, text='tab 2')"
         prt(line.format(flds[var]))
-        line = "{0}.add(tab3, text = 'tab 3')"
+        line = "{0}.add(tab3, text='tab 3')"
         prt(line.format(flds[var]))
         line = "{0}.grid(row={1}, column={2}{3}{4}{5})\n"
         prt(line.format(flds[var], flds[row],
                         flds[col], rowspan, colspan, sticky))
         line = '''
-        Button(tab1, text='Exit',
+        Button(tab1, text="Exit",
                command=root.destroy).grid(row=1, column=1, padx=100, pady=100)
-        Label(tab2, text='tab 2').pack(padx=50, pady=50)
-        Label(tab3, text='tab 3').pack(padx=50, pady=50)
+        Label(tab2, text="tab 2").pack(padx=50, pady=50)
+        Label(tab3, text="tab 3").pack(padx=50, pady=50)
         '''
         prt(line + "\n")
 
@@ -409,10 +417,10 @@ for rownum in range(3, sheet.max_row + 1):  # loop through each row
         line = '''
         # from tkinter import messagebox
         # messagebox.showerror("Error", "Error message")
-        # messagebox.showwarning("Warning","Warning message")
-        # messagebox.showinfo("Information","Informative message")
-        # messagebox.askokcancel('Message title', 'Message content')
-        # messagebox.askretrycancel('Message title', 'Message content')
+        # messagebox.showwarning("Warning", "Warning message")
+        # messagebox.showinfo("Information", "Informative message")
+        # messagebox.askokcancel("Message title", "Message content")
+        # messagebox.askretrycancel("Message title", "Message content")
         #     ok, yes, retry returns TRUE
         #     no, cancel returns FALSE
         '''
@@ -422,12 +430,12 @@ for rownum in range(3, sheet.max_row + 1):  # loop through each row
     elif flds[wgt].lower().startswith("file"):
         line = '''
         # from tkinter import filedialog
-        # filename =  filedialog.askopenfilename(initialdir = "/",
+        # filename =  filedialog.askopenfilename(initialdir="/",
         #             title = "Open file",
-        #             filetypes = (("jpeg files","*.jpg"),("all files","*.*")))
-        # filename = filedialog.asksaveasfilename(initialdir = "/",
+        #             filetypes = (("jpeg files", "*.jpg"),("all files", "*.*")))
+        # filename = filedialog.asksaveasfilename(initialdir="/",
         #             title = "Save file",
-        #             filetypes = (("jpeg files","*.jpg"),("all files","*.*")))'''
+        #             filetypes = (("jpeg files", "*.jpg"), ("all files", "*.*")))'''
         prt(line + "\n")
 
     # MESSAGE
@@ -441,14 +449,14 @@ for rownum in range(3, sheet.max_row + 1):  # loop through each row
     # POPUP MENU
     elif flds[wgt].lower().startswith("pop"):
         line = '''
-        # self.popup_menu = Menu(self, tearoff = 0)
-        # self.popup_menu.add_command(label = "Copy",
-        #                             command = lambda:self.function(1))
-        # self.popup_menu.add_command(label = "Paste",
-        #                             command = lambda:self.function(2))
+        # self.popup_menu = Menu(self, tearoff=0)
+        # self.popup_menu.add_command(label="Copy",
+        #                             command=lambda:self.function(1))
+        # self.popup_menu.add_command(label="Paste",
+        #                             command=lambda:self.function(2))
         # self.popup_menu.add_separator()
-        # self.popup_menu.add_command(label = "say bye", command = exit)
-        # self.txt.bind("<Button-3>",self.do_popup)
+        # self.popup_menu.add_command(label="say bye", command=exit)
+        # self.txt.bind("<Button-3>", self.do_popup)
 
     # def do_popup(self,event):
     #     try:
@@ -482,6 +490,9 @@ for rownum in range(3, sheet.max_row + 1):  # loop through each row
             pass
         else:
             prt("\nNUNRECOGNIZED WIDGET IDENTIFIER: " + flds[wgt] + "\n\n")
+
+    rownum += 1  # increment loop through spreadsheet
+
 
 fout = open(args.outfile, "w")
 
