@@ -1,14 +1,15 @@
-# TkAuto
+# TKAUTO
 
-"tkinter" is a useful Python module for creating GUI  
-desktop applications or small utilities.
+Tkinter is a fast and time tested GUI module for Python.  
+Tkinter lacks some of the 'high-end' features found in newer  
+packages like Qt and Gtk3. Still tkinter allows you to put  
+together a solid app vary quickly.
 
-TkAuto is a Python program that uses specs from a spread-sheet  
-to generate Python-tkinter code - the basis for a GUI app.
+TkAuto is a 'system' I built to speed up the tkinter coding  
+process.
 
 TkAuto uses an Excel spreadsheet, a Python-tkinter template, and  
-the tkinter grid layout to help get the app layout coded and  
-tested fast.
+the tkinter grid layout to help get the app layout coded quickly.
 
 
 ## Overview
@@ -16,7 +17,7 @@ tested fast.
 ![overview](images/tkauto.jpg)
  
 
-## Setup Using Spreadsheet
+## Setup Using Spreadsheet Template
 
 ![Spreadsheet](images/layout1.png)
 
@@ -35,8 +36,10 @@ commented code as examples for you to modify and extend.
 
 ![Spreadsheet](images/layout3.png)
 
-The sheet called `menus` is an example of how to layout menus  
-in the `layout` sheet.
+The following is an example of `menus` may be coded  
+into the xlsx layout spreadsheet template.  
+There is a `menus` tab with this starter menu whose rows  
+can be copied into the layout.
 
 ![Spreadsheet](images/layout4.png)
 
@@ -83,28 +86,31 @@ Unless one has been coding in tkinter for many years, and tkinter syntax has bec
 second nature, this tkauto process does serve its goal of speeding up Python-Tkinter  
 development.  
 
-Currently these widgits and functions are supported:  
-```
-  button
-  entry
-  label
-  scrollx
-  scrolly
-  list
-  text
-  check
-  radio  
-  spin
-  options
-  combo
-  notebook
-  geometry
-  progress  
-  beginmenu endmenu
-  messagebox
-  filedialog
-  popup
-  clip
-  frame
+Currently `tkauto` recognizes these widgets and functions:  
+```text
+begmenu ... endmenu
+button
+check
+clip
+combo
+dialog
+entry
+filedialog
+frame
+geometry
+label
+list
+message
+messagebox
+notebook
+options
+popup
+progress
+radio
+scrollx
+scrolly
+spin
+submenu
+text
 ```
 ---

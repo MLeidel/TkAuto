@@ -1,0 +1,24 @@
+begmenu ... endmenu
+button
+check
+clip
+combo
+dialog
+entry
+filedialog
+frame
+geometry
+label
+list
+message
+messagebox
+notebook
+options
+popup
+progress
+radio
+scrollx
+scrolly
+spin
+submenu
+text

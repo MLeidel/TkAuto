@@ -426,6 +426,17 @@ while(True):
         '''
         prt(line + "\n")
 
+    # DIALOG (simpledialog)
+    elif flds[wgt].lower() == "dialog":
+        line = '''
+        # # from tkinter import simpledialog
+        # simpledialog.askfloat(title, prompt)
+        # simpledialog.askinteger(title, prompt)
+        # simpledialog.askstring(title, prompt)
+        # if answer is not None:
+        '''
+        prt(line + "\n")
+
     # FILEDIALOG
     elif flds[wgt].lower().startswith("file"):
         line = '''
