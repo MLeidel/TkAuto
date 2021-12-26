@@ -5,7 +5,7 @@ Author: Michael Leidel
 Description:
 Builds a Python tkinter application shell from an
 xlsx file (layout_tpl.xlsx) with these columns:
-Widget, Variable, Text, Command/Textvariable, Row, Column, Rowspan, Colspan, Sticky, other attr
+see layout_tpl.xlsx
 '''
 import os
 import sys
@@ -42,7 +42,6 @@ MN_VAR = ""  # holds the menu object variable found in column 1 os ss
 def prt(s):
     ''' Adjust leading tabs/spaces for output here '''
     global sout
-    # print("        " + s)
     sout += "        " + s + "\n"
 
 
@@ -233,11 +232,11 @@ while(True):
         # efont = Font(family="Helvetica", size=14)
         # self.EDITOR.configure(font=efont)
         # self.EDITOR.config(wrap="word", # wrap=NONE
-        #        undo=True, # Tk 8.4
-        #        width=50,
-        #        height=12,
-        #        insertbackground='#000',   # cursor color
-        #        tabs=(efont.measure(' ' * 4),))
+        #                    undo=True, # Tk 8.4
+        #                    width=50,
+        #                    height=12,
+        #                    insertbackground='#000',   # cursor color
+        #                    tabs=(efont.measure(' ' * 4),))
         # self.EDITOR.focus()
         ## basic handler commands #
         # .get("1.0", END)
