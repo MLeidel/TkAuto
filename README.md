@@ -1,68 +1,38 @@
-# TKAUTO
+# ttkauto
+Generate a themed Python GUI using a spreadsheet  
+tkauto.py is a python 3.# script.  
 
-Tkinter is a fast and time tested GUI module for Python.  
-Tkinter lacks some of the 'high-end' features found in newer  
-packages like Qt and Gtk3. Still tkinter allows you to put  
-together a solid app vary quickly.
+tkauto inputs an xlsx (excel) file and builds a starter script 
+for a Python GUI desktop application. The Python script will use 
+tkinter, ttk, and ttkthemed for the GUI API.
+<br>
 
-TkAuto is a 'system' I built to speed up the tkinter coding  
-process.
+## App Code Specs in Excel Spreadsheet
 
-TkAuto uses an Excel spreadsheet, a Python-tkinter template, and  
-the tkinter grid layout to help get the app layout coded quickly.
+![Spreadsheet](images/tkauto.jpg)
 
-
-## Overview
-
-![overview](images/tkauto.jpg)
- 
-
-## Setup Using Spreadsheet Template
-
-![Spreadsheet](images/layout1.png)
-
-`layout_tpl.xlsx' is a spreadsheet used to indicate which widgets  
+_layout\_tpl.xlsx_ is a spreadsheet used to indicate which widgets  
 your application will use, where they'll be located, and some of  
-their essential options. Save-As to a different name.
+their essential options. But first, __Save it to a different name__.
 
-Some columns are commented to further define their purpose.  
-Here's a little example of how the spreadsheet is coded.  
+Some columns are commented to further define their purpose.
 
-![Spreadsheet](images/layout2.png)
+![Spreadsheet](images/layout5.png)
 
-This sheet to serves as a guide for filling in the cells for each widget.  
-Note that widgets where all the cells are black will only generate  
-commented code as examples for you to modify and extend.
+Here's a little more already filled in.
+
+There is a minimum of options provided in the spreadsheet.  
+It usually will run with out editing to check the general placements.  
+
+In the _layout\_tpl.xlsx_ workbook there is a sheet called guide.  
 
 ![Spreadsheet](images/layout3.png)
 
-The following is an example of `menus` may be coded  
-into the xlsx layout spreadsheet template.  
-There is a `menus` tab with this starter menu whose rows  
-can be copied into the layout.
 
-![Spreadsheet](images/layout4.png)
-
-## Tkauto Process in a Nutshell
-1. **Create a layout with Excel and save to `layout.xlsx`**  
-2. **Run `python tkauto.py layout.xlsx` - by default this will create `output.py`**  
-3. **Make any corrections and add business logic to `output.py`**
-
-Tkauto reads in a template file called `tkauto_tpl.py` along with your `layout.xlsx` file.  
-`tkauto.py` produces an output script called `output.py`.  
-When `output.py` is satisfactory you rename it and start editing the code  
-to finish the application.  
-
-Usually you will not run `tkauto.py` more than once or twice. If you need to add  
-some widgets later, you will have to code them.  
-
-
-*RUNNING `tkauto.py` A SECOND TIME OVER-WRITES THE `output.py` FILE*  
+## Generate the script
 
 ```
-usage: tkauto.py [-h] [-o OUTFILE] filename
-
-tkauto build Python tkinter GUI
+usage: tkauto.py [-h] [-o OUTFILE] [-x] filename
 
 positional arguments:
   filename    Excel (xlsx) file to use as input
@@ -70,47 +40,66 @@ positional arguments:
 optional arguments:
   -h, --help  show this help message and exit
   -o OUTFILE  output Python file
+  -x          Execute with python3 after compile
 
 ```
 
-## The tkinter grid process
+## Example Run
 
-Suggestions:  
-- Design your app on paper (perhaps grid-paper) old school.
-- From the paper design you can easily fill in the spreadsheet.
-- Perhaps iterate the previous step a few times to notice how  
-  everything lays out.  
-- Rename the `output.py` file and finish the coding.  
-
-Unless one has been coding in tkinter for many years, and tkinter syntax has become  
-second nature, this tkauto process does serve its goal of speeding up Python-Tkinter  
-development.  
-
-Currently `tkauto` recognizes these widgets and functions:  
-```text
-begmenu ... endmenu
-button
-check
-clip
-combo
-dialog
-entry
-filedialog
-frame
-geometry
-label
-list
-message
-messagebox
-notebook
-options
-popup
-progress
-radio
-scrollx
-scrolly
-spin
-submenu
-text
 ```
+python3 tkauto.py mylayout.xlsx -o myapp.py -x
+or
+python3 tkauto.py layout.xlsx
+
+```
+When the "-o" option is not used tkauto.py produces an output file
+called "output.py".
+
+The output file is what you __rename__ and start editing to finish the application.  
+
+Usually you will not run `tkauto.py` more than once or twice. If you forgot some widgets
+or options usually you can just edit them in.
+
+**_BE CAREFUL_**  
+RUNNING tkauto.py creates a completely new output file each time.  
+
+---
+
+The output for this example is shown below with some minor editing to the event handlers.
+
+![example GUI](images/basic.png)
+
+```
+from tkinter import *
+from tkinter.ttk import *  # defaults all widgets as ttk
+from ttkthemes import ThemedTk  # module applied to all widgets
+                                # pip install ttkthemes
+
+class Application(Frame):
+    ''' use oop format for GUI program '''
+    def __init__(self, master=None):
+        super().__init__(master)
+        self.pack()
+        self.create_widgets()
+
+    def create_widgets(self):
+        ''' define widgets and show '''
+        style = Style()
+        style.configure('TButton', width=14, font='Purisa 15')
+
+        btn1 = Button(self, text="Close App", command=exit)
+        btn1.grid(row=0,column=0, padx=5, pady=5)
+
+        btn2 = Button(self, text="Ok", command=exit)
+        btn2.grid(row=1,column=0, padx=5, pady=5)
+
+# 'alt', 'scidsand', 'classic', 'scidblue',
+# 'scidmint', 'scidgreen', 'default', 'scidpink',
+# 'arc', 'scidgrey', 'scidpurple', 'clam'
+root = ThemedTk(theme="scidsand")
+root.title("ThemedTk (scidsand) W/Style config")
+app = Application(master=root)
+app.mainloop()
+```
+
 ---

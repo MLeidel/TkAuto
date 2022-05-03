@@ -17,7 +17,7 @@ class Application(Frame):
         self.lst = Listbox(self, height=5)
         self.lst.grid(row=1, column=1, sticky='nse')
 
-        self.lst.bind("<Double-Button-1>", self.on_dblclick_list)
+        self.lst.bind("<<ListboxSelect>>", self.on_list_selected)
         for i in range(100):
             self.lst.insert(i, str(i) + "Item")
 
@@ -41,7 +41,7 @@ class Application(Frame):
         fp = self.lst.get(list_item[0])
         self.vlbltext.set(str(fp))
 
-    def on_dblclick_list(self, event):
+    def on_list_selected(self, event):
         ''' action for double clicking the listbox item '''
         list_item = self.lst.curselection()
         fp = self.lst.get(list_item[0])
@@ -55,7 +55,7 @@ class Application(Frame):
 # 'arc', 'scidgrey', 'scidpurple', 'clam', 'smog'
 # 'kroc', 'black', 'clearlooks'
 # 'radiance', 'blue' : https://wiki.tcl-lang.org/page/List+of+ttk+Themes
-root = ThemedTk(theme="clam")
+root = ThemedTk(theme="default")
 
 root.title("Listbox")
 app = Application(root)

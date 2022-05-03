@@ -1,19 +1,23 @@
 '''
-tkauto_tpl.py
-Used with tkauto.py and tkmenu.py
-'''
+code file:
+date:
+commants:
+    tkauto generated
 
+'''
 from tkinter import *
 from tkinter.ttk import *  # defaults all widgets as ttk
-from ttkthemes import ThemedTk  # ttkthemes is applied to all widgets
+import os
 # from tkinter.font import Font
     # myfont = Font(family='Lucida Console', weight = 'bold', size = 20)
-# import os, sys
+# import sys
 # import webbrowser
 # import pyperclip
-# from tkinter.filedialog import askopenfilename
+# from tkinter import filedialog
 # from tkinter import messagebox
+# from tkinter import simpledialog
 # from functools import partial # action_w_arg = partial(self.proc_btns, n)
+from ttkthemes import ThemedTk  # ttkthemes is applied to all widgets
 
 class Application(Frame):
     ''' main class docstring '''
@@ -35,13 +39,13 @@ class Application(Frame):
         self.lst = Listbox(self, height=5)
         self.lst.grid(row=1, column=1, sticky='nse')
         
-        # self.LISTBOX.bind("<Double-Button-1>", self.open_path)
+        # self.LISTBOX.bind("<<ListboxSelect>>", self.on_select_list)
         # for i in range(100):
         #     self.LISTBOX.insert(i, str(i) + "Item")
         
     ## Handler for List selection
     ## Make this a class method
-    # def open_path(self, event):
+    # def on_select_list(self, event):
     #     list_item = self.LISTBOX.curselection()
     #     fp = self.LISTBOX.get(list_item[0])
     #     print(str(fp) + " --> " + str(list_item[0]) +
@@ -64,7 +68,7 @@ class Application(Frame):
         
 
         self.scroll = Scrollbar(self, orient=VERTICAL, command=self.lst.yview)
-        self.scroll.grid(row=1, column=2, rowspan=2, sticky='nsw')  # use N+S+E
+        self.scroll.grid(row=1, column=2, rowspan=2, sticky='nsw')  # use nse
         self.lst['yscrollcommand'] = self.scroll.set
 
         self.vlbltext = StringVar()
@@ -88,14 +92,14 @@ class Application(Frame):
 
 #
 
-# def save_location():
+# UNCOMMENT THE FOLLOWING TO SAVE GEOMETRY INFO
+# def save_location(e=None):
 #     ''' executes at WM_DELETE_WINDOW event '''
-#     with open("winfoxy", "w") as fout:
-#         fout.write(str(root.winfo_x()) + "\n" + str(root.winfo_y() - 24))
+#     with open("winfo", "w") as fout:
+#         fout.write(root.geometry())
 #     root.destroy()
 
-# root = Tk()
-# Requires ttkthemes module
+# ttkthemes
 # 'alt', 'scidsand', 'classic', 'scidblue',
 # 'scidmint', 'scidgreen', 'default', 'scidpink',
 # 'arc', 'scidgrey', 'scidpurple', 'clam', 'smog'
@@ -103,21 +107,27 @@ class Application(Frame):
 # 'radiance', 'blue' : https://wiki.tcl-lang.org/page/List+of+ttk+Themes
 root = ThemedTk(theme="clam")
 
-# root.geometry("200x120") # WxH+left+top
-#   or the following:
-#   the following repositions the window from last time '''
-# if os.path.isfile("winfoxy"):
-#     lcoor = tuple(open("winfoxy", 'r'))  # no relative path for this
-#     root.geometry('350x200+%d+%d'%(int(lcoor[0].strip()),int(lcoor[1].strip())))
+# change working directory to path for this file
+p = os.path.realpath(__file__)
+os.chdir(os.path.dirname(p))
+
+# UNCOMMENT THE FOLLOWING TO SAVE GEOMETRY INFO
+# if os.path.isfile("winfo"):
+#     with open("winfo") as f:
+#         lcoor = f.read()
+#     root.geometry(lcoor.strip())
 # else:
 #     root.geometry("350x200") # WxH+left+top
 
+
 root.title("Tkinter Demo")
+# root.protocol("WM_DELETE_WINDOW", save_location)  # UNCOMMENT TO SAVE GEOMETRY INFO
 # Sizegrip(root).place(rely=1.0, relx=1.0, x=0, y=0, anchor=SE)
-# root.resizable(0,0) # no resize & removes maximize button
+# root.resizable(w, h) # no resize & removes maximize button
+# root.minsize(w, h)  # width, height
+# root.maxsize(w, h)
 # root.overrideredirect(True) # removed window decorations
 # root.iconphoto(False, PhotoImage(file='icon.png'))
 # root.attributes("-topmost", True)  # Keep on top of other windows
-# root.call("wm", "attributes", ".", "-alpha", "0.9") # Window Opacity 0.0-1.0
 app = Application(root)
 app.mainloop()
