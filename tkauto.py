@@ -19,6 +19,8 @@ TPLPATH = os.path.dirname(p) + "/"
 parser = argparse.ArgumentParser(description='tkauto build Python tkinter GUI')
 parser.add_argument('-o', dest='outfile', action='store',
                     default='output.py', help='output Python file')
+parser.add_argument('-x', dest='exec', action='store_true',
+                    help='Execute with python3 after compile')
 parser.add_argument('filename', help='Excel (xlsx) file to use as input')
 args = parser.parse_args()
 
@@ -524,3 +526,7 @@ fout.close()
 fin.close()
 print("\n\nFind new script in 'output.py'\n")
 print("Some Widgets may need futher definition\n\n")
+
+if args.exec:
+    comline = "python3 " + args.outfile
+    os.system(comline)
