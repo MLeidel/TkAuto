@@ -497,6 +497,17 @@ while(True):
         line = "root.geometry(\"%s\")" % (flds[var])
         prt(line + "\n")
 
+    # SCALE
+    elif flds[wgt].lower() == "scale":
+        prt("self." + flds[com] + " = DoubleVar()")
+        line = "{0} = Scale(self, variable=self.{1}{2})"
+        prt(line.format(flds[var], flds[com], attribs))
+        line = "{0}.grid(row={1}, column={2}{3}{4}{5})"
+        prt(line.format(flds[var], flds[row],
+                        flds[col], rowspan, colspan, sticky))
+        line = "# str(self.var.get())"
+        prt(line + "\n")
+
     else:
         if flds[wgt].startswith("Widget"):
             pass

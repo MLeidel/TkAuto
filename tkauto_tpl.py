@@ -78,7 +78,7 @@ os.chdir(os.path.dirname(p))
 root.title("Tkinter Demo")
 # root.protocol("WM_DELETE_WINDOW", save_location)  # UNCOMMENT TO SAVE GEOMETRY INFO
 # Sizegrip(root).place(rely=1.0, relx=1.0, x=0, y=0, anchor=SE)
-# root.resizable(w, h) # no resize & removes maximize button
+# root.resizable(0, 0) # no resize & removes maximize button
 # root.minsize(w, h)  # width, height
 # root.maxsize(w, h)
 # root.overrideredirect(True) # removed window decorations
