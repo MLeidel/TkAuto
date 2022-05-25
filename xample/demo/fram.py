@@ -44,7 +44,55 @@ class Application(Frame):
                 padx and pady
                 sticky '''
 
-    # INSERT TKAUTO OUTPUT BELOW HERE
+        self.vrad1 = StringVar() # USE ONE VAR PER GROUP OF BUTTONS
+        rad1 = Radiobutton(self, variable=self.vrad1, value='radio btn 1', text='radio btn 1')
+        rad1.grid(row=1, column=1)
+
+        self.vrad2 = StringVar() # USE ONE VAR PER GROUP OF BUTTONS
+        rad2 = Radiobutton(self, variable=self.vrad2, value='radio btn 2', text='radio btn 2')
+        rad2.grid(row=2, column=1)
+
+        self.vrad3 = StringVar() # USE ONE VAR PER GROUP OF BUTTONS
+        rad3 = Radiobutton(self, variable=self.vrad3, value='radio btn 3', text='radio btn 3')
+        rad3.grid(row=3, column=1)
+
+        self.vchk1 = IntVar()
+        chk1 = Checkbutton(self, variable=self.vchk1, text='checkbox 1')
+        chk1.grid(row=1, column=2)
+
+        self.vchk2 = IntVar()
+        chk2 = Checkbutton(self, variable=self.vchk2, text='checkbox 2')
+        chk2.grid(row=2, column=2)
+
+        optionlist = ('aaa', 'bbb', 'ccc', 'ddd', 'eee', 'fff')
+        self.vopts = StringVar()
+        self.vopts.set(optionlist[0])
+        opts = OptionMenu(self, self.vopts, *optionlist)
+        opts.grid(row=3, column=2)
+
+        lbl = Label(self, text='below is a Label')
+        lbl.grid(row=4, column=1, columnspan=2, sticky='ew')
+
+        self.vtbx = StringVar()
+        # self.vtbx.trace("w", self.eventHandler)
+        tbx = Entry(self, textvariable=self.vtbx)
+        tbx.grid(row=5, column=1, columnspan=2, sticky='ew')
+
+        self.vcombo = StringVar()
+        combo = Combobox(self, textvariable=self.vcombo)
+        combo['values'] = ('value1', 'value2', 'value3')
+        # COMBO.bind('<<ComboboxSelected>>', self.ONCOMBOSELECT)
+        combo.current(0)
+        combo.grid(row=6, column=1, columnspan=2, sticky='ew')
+
+        self.vsc = DoubleVar()
+        sc = Scale(self, variable=self.vsc)
+        sc.grid(row=7, column=1, columnspan=2, sticky='ew')
+        # str(self.var.get())
+
+        msg = Message(self, text='blah blah')
+        msg.grid(row=8, column=1, columnspan=2, sticky='nsew')
+
 
     # def eventHandler(self):
     #     pass

@@ -31,7 +31,7 @@ class Application(Frame):
         self.style = Style()
         self.style.configure("TButton", width=15)
 
-        root.geometry("670x340")
+        root.geometry("715x445")
 
         self.lst = Listbox(self, height=5, borderwidth=0)
         self.lst.grid(row=1, column=1, sticky='nsew')
@@ -61,14 +61,14 @@ class Application(Frame):
         # .insert("1.0", "New text content ...")
 
         self.prg_bar = Progressbar(self, orient='horizontal', mode='indeterminate', maximum=40)
-        self.prg_bar.grid(row=2, column=1, columnspan=4, sticky='ew', pady=4)
+        self.prg_bar.grid(row=2, column=1, columnspan=5, sticky='ew', pady=4)
         # prg_bar.start() | prg_bar.stop() | prg_bar.grid_forget() | prg_bar.grid(self, ...)
 
         btn_progress = Button(self, text='Progress Bar', command=self.progress)
-        btn_progress.grid(row=3, column=1)
+        btn_progress.grid(row=3, column=1, pady=3)
 
         btn_close = Button(self, text='Close', command=exit)
-        btn_close.grid(row=3, column=3)
+        btn_close.grid(row=3, column=5)
 
         # column 5 frame with widgets
 
@@ -124,6 +124,18 @@ class Application(Frame):
         sc.grid(row=7, column=1, columnspan=2, sticky='ew')
         # str(self.vsc.get())
 
+        msgtext = '''The 'grid' layout is used throughout.
+Directly above is the Scale widget.
+Above that is a combobox.
+Use that to choose a different theme.
+This text is in a Message widget.
+All the widgets on the right side
+are in a separate Frame.
+
+        '''
+        msg = Message(fram, text=msgtext)
+        msg.grid(row=8, column=1, columnspan=2, rowspan=3, sticky='nsew')
+
     # HANDLERS FOLLOW
 
 
@@ -159,7 +171,7 @@ os.chdir(os.path.dirname(p))
 root.title("Tkinter Demo")
 # root.protocol("WM_DELETE_WINDOW", save_location)  # UNCOMMENT TO SAVE GEOMETRY INFO
 # Sizegrip(root).place(rely=1.0, relx=1.0, x=0, y=0, anchor=SE)
-# root.resizable(0, 0) # no resize & removes maximize button
+root.resizable(0, 0) # no resize & removes maximize button
 # root.minsize(w, h)  # width, height
 # root.maxsize(w, h)
 # root.overrideredirect(True) # removed window decorations

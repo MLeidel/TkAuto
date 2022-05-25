@@ -34,9 +34,17 @@ class Application(Frame):
 
         # customize widget style when using ttk...
         # style = Style()
-        # style.configure("TButton", width=10)
+        # style.configure("TButton", width=10) # global
+        # style.configure("my.TButton", width=10) # 'style' option
 
-        root.geometry("450x350")
+        ''' OPTIONS FOR 'grid' FUNCTIONS:
+                column and row
+                columnspan and rowspan
+                ipadx and ipady
+                padx and pady
+                sticky '''
+
+        root.geometry("800x500")
 
         self.lst = Listbox(self, height=5, borderwidth=0)
         self.lst.grid(row=1, column=1, sticky='nsew')
@@ -97,14 +105,14 @@ class Application(Frame):
         self.txt['yscrollcommand'] = self.sb_txt.set
 
         prg_bar = Progressbar(self, orient='horizontal', mode='indeterminate', maximum=20 )
-        prg_bar.grid(row=2, column=1, columnspan=4, sticky='ew')
+        prg_bar.grid(row=2, column=1, columnspan=5, sticky='ew')
         # prg_bar.start() | prg_bar.stop() | prg_bar.grid_forget() | prg_bar.grid(self, ...) 
 
         btn_progress = Button(self, text='Progress Bar', command=self.progress)
         btn_progress.grid(row=3, column=1)
 
         btn_close = Button(self, text='Close', command=self.exit)
-        btn_close.grid(row=3, column=3)
+        btn_close.grid(row=3, column=5)
 
         
         # lframe = LabelFrame(self, text="text",
@@ -114,52 +122,6 @@ class Application(Frame):
         # fram = Frame(self, width=100, height=100)
         # fram.grid(row=1, column=1, sticky='nsew')
         
-
-        self.vrad1 = StringVar() # USE ONE VAR PER GROUP OF BUTTONS
-        rad1 = Radiobutton(self, variable=self.vrad1, value='radio btn 1', text='radio btn 1')
-        rad1.grid(row=1, column=1)
-
-        self.vrad2 = StringVar() # USE ONE VAR PER GROUP OF BUTTONS
-        rad2 = Radiobutton(self, variable=self.vrad2, value='radio btn 2', text='radio btn 2')
-        rad2.grid(row=2, column=1)
-
-        self.vrad3 = StringVar() # USE ONE VAR PER GROUP OF BUTTONS
-        rad3 = Radiobutton(self, variable=self.vrad3, value='radio btn 3', text='radio btn 3')
-        rad3.grid(row=3, column=1)
-
-        self.vchk1 = IntVar()
-        chk1 = Checkbutton(self, variable=self.vchk1, text='checkbox 1')
-        chk1.grid(row=1, column=2)
-
-        self.vchk2 = IntVar()
-        chk2 = Checkbutton(self, variable=self.vchk2, text='checkbox 2')
-        chk2.grid(row=2, column=2)
-
-        optionlist = ('aaa', 'bbb', 'ccc', 'ddd', 'eee', 'fff')
-        self.vopts = StringVar()
-        self.vopts.set(optionlist[0])
-        opts = OptionMenu(self, self.vopts, *optionlist)
-        opts.grid(row=3, column=2)
-
-        lbl = Label(self, text='below is a Label')
-        lbl.grid(row=4, column=1, columnspan=2, sticky='ew')
-
-        self.vtbx = StringVar()
-        # self.vtbx.trace("w", self.eventHandler)
-        tbx = Entry(self, textvariable=self.vtbx)
-        tbx.grid(row=5, column=1, columnspan=2, sticky='ew')
-
-        self.vcombo = StringVar()
-        combo = Combobox(self, textvariable=self.vcombo)
-        combo['values'] = ('value1', 'value2', 'value3')
-        # COMBO.bind('<<ComboboxSelected>>', self.ONCOMBOSELECT)
-        combo.current(0)
-        combo.grid(row=6, column=1, columnspan=2, sticky='ew')
-
-        self.vsc = DoubleVar()
-        sc = Scale(self, variable=self.vsc)
-        sc.grid(row=7, column=1, columnspan=2, sticky='ew')
-        # str(self.var.get())
 
         
         # from tkinter import messagebox
@@ -179,7 +141,6 @@ class Application(Frame):
         ''' docstring '''
 
 
-
     # def eventHandler(self):
     #     pass
 
@@ -190,7 +151,7 @@ class Application(Frame):
 
 # UNCOMMENT THE FOLLOWING TO SAVE GEOMETRY INFO
 # def save_location(e=None):
-#     ''' executes at WM_DELETE_WINDOW event '''
+#     ''' executes at WM_DELETE_WINDOW event - see below '''
 #     with open("winfo", "w") as fout:
 #         fout.write(root.geometry())
 #     root.destroy()
@@ -201,7 +162,7 @@ class Application(Frame):
 # 'arc', 'scidgrey', 'scidpurple', 'clam', 'smog'
 # 'kroc', 'black', 'clearlooks'
 # 'radiance', 'blue' : https://wiki.tcl-lang.org/page/List+of+ttk+Themes
-root = ThemedTk(theme="clam")
+root = ThemedTk(theme="scidmint")
 
 # change working directory to path for this file
 p = os.path.realpath(__file__)
@@ -213,13 +174,13 @@ os.chdir(os.path.dirname(p))
 #         lcoor = f.read()
 #     root.geometry(lcoor.strip())
 # else:
-#     root.geometry("350x200") # WxH+left+top
+#     root.geometry("400x300") # WxH+left+top
 
 
 root.title("Tkinter Demo")
 # root.protocol("WM_DELETE_WINDOW", save_location)  # UNCOMMENT TO SAVE GEOMETRY INFO
 # Sizegrip(root).place(rely=1.0, relx=1.0, x=0, y=0, anchor=SE)
-# root.resizable(w, h) # no resize & removes maximize button
+# root.resizable(0, 0) # no resize & removes maximize button
 # root.minsize(w, h)  # width, height
 # root.maxsize(w, h)
 # root.overrideredirect(True) # removed window decorations
