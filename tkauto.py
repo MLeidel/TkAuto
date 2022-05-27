@@ -428,7 +428,7 @@ while(True):
         prt(line + "\n")
 
     # DIALOG (simpledialog)
-    elif flds[wgt].lower() == "dialog":
+    elif flds[wgt].lower() == "simpledialog":
         line = '''
         # # from tkinter import simpledialog
         # simpledialog.askfloat(title, prompt)
@@ -506,6 +506,20 @@ while(True):
         prt(line.format(flds[var], flds[row],
                         flds[col], rowspan, colspan, sticky))
         line = "# str(self.var.get())"
+        prt(line + "\n")
+
+
+    elif flds[wgt].lower() == "toplevel":
+        line = '''
+    # def create_window(self):
+    #     t = Toplevel(self)
+    #     t.wm_title("Toplevel")
+    #     t.geometry("200x100") # WxH+left+top
+    #     l = Label(t, text="This is a Toplevel Window")
+    #     l.grid(row=0, column=0, padx=2, pady=20)
+    #     tvbtn = Button(t, text=" Exit ", command=t.destroy)
+    #     tvbtn.grid(row=2, column=0, sticky='w', padx=2, pady=4)
+    '''
         prt(line + "\n")
 
     else:

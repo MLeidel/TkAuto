@@ -1,9 +1,9 @@
-begmenu ... endmenu
+begmenu
 button
 check
 clip
 combo
-dialog
+endmenu
 entry
 filedialog
 frame
@@ -17,8 +17,11 @@ options
 popup
 progress
 radio
+scale
 scrollx
 scrolly
+simpledialog
 spin
 submenu
 text
+toplevel

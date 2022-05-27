@@ -45,11 +45,18 @@ class Application(Frame):
                 padx and pady
                 sticky="nsew"
         -------------------------------------------------------- '''
+        root.geometry("200x100") # WxH+left+top
+        btn = Button(self, text="Toplevel", command=self.create_window)
+        btn.grid(row=1, column=1, sticky='nsew')
 
-    # INSERT TKAUTO OUTPUT BELOW HERE
-
-    # def eventHandler(self):
-    #     pass
+    def create_window(self):
+        t = Toplevel(self)
+        t.wm_title("Toplevel")
+        t.geometry("200x100") # WxH+left+top
+        l = Label(t, text="This is a Toplevel Window")
+        l.grid(row=0, column=0, padx=2, pady=20)
+        tvbtn = Button(t, text=" Exit ", command=t.destroy)
+        tvbtn.grid(row=2, column=0, sticky='w', padx=2, pady=4)
 
     # def eventHandler(self):
     #     pass
