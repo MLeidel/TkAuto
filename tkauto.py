@@ -6,6 +6,7 @@ Description:
 Builds a Python tkinter application shell from an
 xlsx file (layout_tpl.xlsx) with these columns:
 see layout_tpl.xlsx
+May 2022 - add "parent" column
 '''
 import os
 import sys
@@ -33,7 +34,7 @@ else:
     sys.exit()
 
 # list (flds) index names for the (row)column values
-nop, wgt, var, txt, com, row, col, rsp, csp, sty, owa = 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10
+nop, wgt, par, var, txt, com, row, col, rsp, csp, sty, owa = 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11
 
 sout = ""  # holds output for injection into template
 
@@ -84,6 +85,8 @@ def proc_menu_item():
     ''' Process one line of menu code '''
     global MN_VAR
     global domenu
+
+    print("proc_menu_item row ", flds[mid])
 
     if flds[mid].lower() == "endmenu":
         prt("root.config(menu=menubar) # display the menu\n\n")  # here ends the menu code
@@ -159,7 +162,7 @@ while(True):
     flds.append("nop")  # zero element not used
 
     # load up the flds list with this row's columns values
-    for c in range(1, 11):  # columns align with list index
+    for c in range(1, 12):  # columns align with list index
         val = sheet.cell(row=rownum, column=c).value
         if val is None:
             flds.append("")
@@ -169,11 +172,13 @@ while(True):
     # first check if processing menu
     if domenu is True:
         proc_menu_item()
+        rownum += 1
         continue
 
     if flds[wgt].lower() == "begmenu":  # going to process a menu
         domenu = True
         prt("menubar = Menu(root)")  # the menu code starts here
+        rownum += 1
         continue
 
     # Process this row/columns values
@@ -188,8 +193,8 @@ while(True):
 
     # BUTTON
     if flds[wgt].lower() == "button":
-        line = "{0} = Button(self, text='{1}', command=self.{2}{3})"
-        prt(line.format(flds[var], flds[txt], flds[com], attribs))
+        line = "{0} = Button({4}, text='{1}', command=self.{2}{3})"
+        prt(line.format(flds[var], flds[txt], flds[com], attribs, flds[par]))
         callbacks.append(flds[com])
         line = "{0}.grid(row={1}, column={2}{3}{4}{5})\n"
         prt(line.format(flds[var], flds[row],
@@ -199,16 +204,16 @@ while(True):
     elif flds[wgt].lower() == "label":
         if flds[com] != "":  # a StringVar was given
             prt("self." + flds[com] + " = StringVar()")
-            line = "{0} = Label(self, text='{1}', textvariable=self.{2}{3})"
-            prt(line.format(flds[var], flds[txt], flds[com], attribs))
+            line = "{0} = Label({4}, text='{1}', textvariable=self.{2}{3})"
+            prt(line.format(flds[var], flds[txt], flds[com], attribs, flds[par]))
             line = "{0}.grid(row={1}, column={2}{3}{4}{5})"
             prt(line.format(flds[var], flds[row],
                             flds[col], rowspan, colspan, sticky))
             line = "self.{}.set('{}')\n"
             prt(line.format(flds[com], flds[txt]))
         else:  # without StringVar
-            line = "{0} = Label(self, text='{1}'{2})"
-            prt(line.format(flds[var], flds[txt], attribs))
+            line = "{0} = Label({3}, text='{1}'{2})"
+            prt(line.format(flds[var], flds[txt], attribs, flds[par]))
             line = "{0}.grid(row={1}, column={2}{3}{4}{5})\n"
             prt(line.format(flds[var], flds[row],
                             flds[col], rowspan, colspan, sticky))
@@ -217,16 +222,16 @@ while(True):
     elif flds[wgt].lower() == "entry":
         prt("self." + flds[com] + " = StringVar()")
         prt("# self." + flds[com] + ".trace(\"w\", self.eventHandler)")
-        line = "{0} = Entry(self, textvariable=self.{1}{2})"
-        prt(line.format(flds[var], flds[com], attribs))
+        line = "{0} = Entry({3}, textvariable=self.{1}{2})"
+        prt(line.format(flds[var], flds[com], attribs, flds[par]))
         line = "{0}.grid(row={1}, column={2}{3}{4}{5})\n"
         prt(line.format(flds[var], flds[row],
                         flds[col], rowspan, colspan, sticky))
 
     # TEXT
     elif flds[wgt].lower() == "text":
-        line = "self.{0} = Text(self{1})"
-        prt(line.format(flds[var], attribs))
+        line = "self.{0} = Text({2}{1})"
+        prt(line.format(flds[var], attribs, flds[par]))
         line = "self.{0}.grid(row={1}, column={2}{3}{4}{5})\n"
         prt(line.format(flds[var], flds[row],
                         flds[col], rowspan, colspan, sticky))
@@ -249,8 +254,8 @@ while(True):
 
     # LIST
     elif flds[wgt].lower().startswith("list"):
-        line = "self.{0} = Listbox(self, height=5{1})"
-        prt(line.format(flds[var], attribs))
+        line = "self.{0} = Listbox({2}{1})"
+        prt(line.format(flds[var], attribs, flds[par]))
         rowspan = getRowSpan(flds[rsp])
         line = "self.{0}.grid(row={1}, column={2}{3}{4}{5})"
         prt(line.format(flds[var], flds[row],
@@ -259,7 +264,7 @@ while(True):
         line = '''
         # self.LISTBOX.bind("<<ListboxSelect>>", self.on_select_list)
         # for i in range(100):
-        #     self.LISTBOX.insert(i, str(i) + "Item")'''
+        #     self.LISTBOX.insert(i, "Item " + str(i))'''
         prt(line)
 
         line = '''
@@ -291,11 +296,11 @@ while(True):
 
     # VERT SCROLLBAR
     elif flds[wgt].lower() == "scrolly":
-        line = "self.{0} = Scrollbar(self, orient=VERTICAL, command=self.{1}.yview)"
+        line = "self.{0} = Scrollbar({2}, orient=VERTICAL, command=self.{1}.yview)"
         if flds[com] == "":
             print("\n\nMISSING list object FOR SCROLLBAR WIDGET\n\n")
             sys.exit()
-        prt(line.format(flds[var], flds[com]))
+        prt(line.format(flds[var], flds[com], flds[par]))
         line = "self.{0}.grid(row={1}, column={2}{3}{4}{5})  # use nse"
         prt(line.format(flds[var], flds[row],
                         flds[col], rowspan, colspan, sticky))
@@ -304,11 +309,11 @@ while(True):
 
     # HORZ SCROLLBAR
     elif flds[wgt].lower() == "scrollx":
-        line = "self.{0} = Scrollbar(self, orient=HORIZONTAL, command=self.{1}.xview)"
+        line = "self.{0} = Scrollbar({2}, orient=HORIZONTAL, command=self.{1}.xview)"
         if flds[com] == "":
             print("\n\nMISSING list/text object FOR SCROLLBAR WIDGET\n\n")
             sys.exit()
-        prt(line.format(flds[var], flds[com]))
+        prt(line.format(flds[var], flds[com], flds[par]))
         line = "self.{0}.grid(row={1}, column={2}{3}{4}{5})"
         prt(line.format(flds[var], flds[row],
                         flds[col], rowspan, colspan, sticky))
@@ -318,8 +323,8 @@ while(True):
     # CHECK BOX
     elif flds[wgt].lower().startswith("check"):
         prt("self.{0} = IntVar()".format(flds[com]))
-        line = "{0} = Checkbutton(self, variable=self.{1}, text='{2}'{3})"
-        prt(line.format(flds[var], flds[com], flds[txt], attribs))
+        line = "{0} = Checkbutton({4}, variable=self.{1}, text='{2}'{3})"
+        prt(line.format(flds[var], flds[com], flds[txt], attribs, flds[par]))
         line = "{0}.grid(row={1}, column={2}{3}{4}{5})\n"
         prt(line.format(flds[var], flds[row],
                         flds[col], rowspan, colspan, sticky))
@@ -327,16 +332,16 @@ while(True):
     elif flds[wgt].lower().startswith("radio"):
         prt("self." + flds[com] +
             " = StringVar() # USE ONE VAR PER GROUP OF BUTTONS")
-        line = "{0} = Radiobutton(self, variable=self.{1}, value='{2}', text='{2}'{4})"
-        prt(line.format(flds[var], flds[com], flds[txt], flds[txt], attribs))
+        line = "{0} = Radiobutton({5}, variable=self.{1}, value='{2}', text='{2}'{4})"
+        prt(line.format(flds[var], flds[com], flds[txt], flds[txt], attribs, flds[par]))
         line = "{0}.grid(row={1}, column={2}{3}{4}{5})\n"
         prt(line.format(flds[var], flds[row],
                         flds[col], rowspan, colspan, sticky))
     # SPIN BOX
     elif flds[wgt].lower().startswith("spin"):
-        prt("self." + flds[com] + " = StringVar()")
-        line = "{0} = Spinbox(self, textvariable=self.{1}{2})"
-        prt(line.format(flds[var], flds[com], attribs))
+        prt("self." + flds[com] + " = StringVar(value=0)")
+        line = "{0} = Spinbox({3}, textvariable=self.{1}, from_=0, to=10{2})"
+        prt(line.format(flds[var], flds[com], attribs, flds[par]))
         line = "{0}.grid(row={1}, column={2}{3}{4}{5})\n"
         prt(line.format(flds[var], flds[row],
                         flds[col], rowspan, colspan, sticky))
@@ -345,8 +350,8 @@ while(True):
         prt("optionlist = ('aaa', 'bbb', 'ccc', 'ddd', 'eee', 'fff')")
         prt("self." + flds[com] + " = StringVar()")
         prt("self." + flds[com] + ".set(optionlist[0])")
-        line = "{0} = OptionMenu(self, self.{1}, *optionlist)"
-        prt(line.format(flds[var], flds[com]))
+        line = "{0} = OptionMenu({2}, self.{1}, *optionlist)"
+        prt(line.format(flds[var], flds[com], flds[par]))
         line = "{0}.grid(row={1}, column={2}{3}{4}{5})\n"
         prt(line.format(flds[var], flds[row],
                         flds[col], rowspan, colspan, sticky))
@@ -354,8 +359,8 @@ while(True):
     # COMBOBOX (from tkinter.ttk import Combobox)
     elif flds[wgt].lower().startswith("combo"):
         prt("self." + flds[com] + " = StringVar()")
-        line = "{0} = Combobox(self, textvariable=self.{1}{2})"
-        prt(line.format(flds[var], flds[com], attribs))
+        line = "{0} = Combobox({3}, textvariable=self.{1}{2})"
+        prt(line.format(flds[var], flds[com], attribs, flds[par]))
         line = "{0}['values'] = ('value1', 'value2', 'value3')"
         prt(line.format(flds[var]))
         prt("# COMBO.bind('<<ComboboxSelected>>', self.ONCOMBOSELECT)")
@@ -366,8 +371,8 @@ while(True):
 
     # PROGRESSBAR
     elif flds[wgt].lower().startswith("prog"):
-        line = "{0} = Progressbar(self, orient='horizontal', mode='indeterminate', maximum=20 {1})"
-        prt(line.format(flds[var], attribs))
+        line = "{0} = Progressbar({2}, orient='horizontal', mode='indeterminate', maximum=20 {1})"
+        prt(line.format(flds[var], attribs, flds[par]))
         line = "{0}.grid(row={1}, column={2}{3}{4}{5})"
         prt(line.format(flds[var], flds[row],
                         flds[col], rowspan, colspan, sticky))
@@ -376,13 +381,13 @@ while(True):
 
     # NOTEBOOK
     elif flds[wgt].lower().startswith("notebook"):
-        line = "{0} = Notebook(self{1})"
-        prt(line.format(flds[var], attribs))
-        line = "tab1 = Frame({0}, width=200, height=200)"
+        line = "{0} = Notebook({2}{1})"
+        prt(line.format(flds[var], attribs, flds[par]))
+        line = "tab1 = Frame({0}, width=99, height=99)  # need W & H"
         prt(line.format(flds[var]))
-        line = "tab2 = Frame({0})"
+        line = "tab2 = Frame({0}, width=99, height=99)"
         prt(line.format(flds[var]))
-        line = "tab3 = Frame({0})"
+        line = "tab3 = Frame({0}, width=99, height=99)"
         prt(line.format(flds[var]))
         line = "{0}.add(tab1, text='tab 1')"
         prt(line.format(flds[var]))
@@ -393,25 +398,30 @@ while(True):
         line = "{0}.grid(row={1}, column={2}{3}{4}{5})\n"
         prt(line.format(flds[var], flds[row],
                         flds[col], rowspan, colspan, sticky))
-        line = '''
-        Button(tab1, text="Exit",
-               command=root.destroy).grid(row=1, column=1, padx=100, pady=100)
-        Label(tab2, text="tab 2").pack(padx=50, pady=50)
-        Label(tab3, text="tab 3").pack(padx=50, pady=50)
-        '''
-        prt(line + "\n")
 
     # FRAMES
-    elif flds[wgt].lower().startswith("frame"):
+    elif flds[wgt].lower() == "frame":
+        line = "{0} = Frame({2}{1})"
+        prt(line.format(flds[var], attribs, flds[par]))
+        line = "{0}.grid(row={1}, column={2}{3}{4}{5})"
+        prt(line.format(flds[var], flds[row],
+                        flds[col], rowspan, colspan, sticky))
         line = '''
         # lframe = LabelFrame(self, text="text",
         #                     width=100, height=100)
         # lframe.grid(row=1, column=1, sticky='nsew')
         #
-        # fram = Frame(self, width=100, height=100)
-        # fram.grid(row=1, column=1, sticky='nsew')
         '''
         prt(line + "\n")
+
+
+    # SEPARATOR
+    elif flds[wgt].lower() == "separator":
+        line = "{0} = Separator({2}{1})"
+        prt(line.format(flds[var], attribs, flds[par]))
+        line = "{0}.grid(row={1}, column={2}{3}{4}{5})\n"
+        prt(line.format(flds[var], flds[row],
+                        flds[col], rowspan, colspan, sticky))
 
     # MESSAGEBOX
     elif flds[wgt].lower() == "messagebox":
@@ -452,8 +462,8 @@ while(True):
 
     # MESSAGE
     elif flds[wgt].lower() == "message":
-        line = "{0} = Message(self, text='{1}'{2})"
-        prt(line.format(flds[var], flds[txt], attribs))
+        line = "{0} = Message({3}, text='{1}'{2})"
+        prt(line.format(flds[var], flds[txt], attribs, flds[par]))
         line = "{0}.grid(row={1}, column={2}{3}{4}{5})\n"
         prt(line.format(flds[var], flds[row],
                         flds[col], rowspan, colspan, sticky))
@@ -500,8 +510,8 @@ while(True):
     # SCALE
     elif flds[wgt].lower() == "scale":
         prt("self." + flds[com] + " = DoubleVar()")
-        line = "{0} = Scale(self, variable=self.{1}{2})"
-        prt(line.format(flds[var], flds[com], attribs))
+        line = "{0} = Scale({3}, variable=self.{1}{2})"
+        prt(line.format(flds[var], flds[com], attribs, flds[par]))
         line = "{0}.grid(row={1}, column={2}{3}{4}{5})"
         prt(line.format(flds[var], flds[row],
                         flds[col], rowspan, colspan, sticky))

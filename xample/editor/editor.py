@@ -1,0 +1,271 @@
+'''
+code file: editor.py
+date:
+commants:
+    tkauto generated
+'''
+from tkinter import *
+from tkinter.ttk import *  # defaults all widgets as ttk
+import os, sys
+from tkinter.font import Font
+# import sys
+# import webbrowser
+from tkinter import filedialog
+from tkinter import messagebox
+from tkinter.messagebox import showerror
+# from functools import partial # action_w_arg = partial(self.proc_btns, n)
+from ttkthemes import ThemedTk  # ttkthemes is applied to all widgets
+
+class Application(Frame):
+    ''' main class docstring '''
+    def __init__(self, parent):
+        Frame.__init__(self, parent)
+        self.pack(fill=BOTH, expand=True, padx=4, pady=4)
+        self.infile = ""
+        self.create_widgets()
+
+    def create_widgets(self):
+        ''' creates GUI for app '''
+
+        #root.geometry("670x440") REMOVE THIS WHEN USING SAVED WINDOW METRICS
+
+        self.editor = Text(self)
+        self.editor.grid(row=1, column=1, columnspan=2, sticky='nsew')
+        efont = Font(family="Andale Mono", size=12)
+        self.editor.configure(font=efont)
+        self.editor.config(wrap=NONE    , # wrap=NONE
+                           undo=True, # Tk 8.4
+                           width=50,
+                           height=20,
+                           insertbackground='#000',   # cursor color
+                           tabs=(efont.measure(' ' * 4),))
+        self.editor.focus()
+        
+        self.scr = Scrollbar(self, orient=VERTICAL, command=self.editor.yview)
+        self.scr.grid(row=1, column=3, sticky='nsw')  # use nse
+        self.editor['yscrollcommand'] = self.scr.set
+
+        self.vlbl = StringVar()  # kind of a status bar
+        lblstat = Label(self, text='status…', textvariable=self.vlbl)
+        lblstat.grid(row=3, column=1, columnspan=3, sticky='ew')
+        self.vlbl.set('status…')
+
+        menubar = Menu(root)
+        mn_file = Menu(menubar, tearoff=0)
+        mn_file.add_command(label="New", command=self.mn_file_new, accelerator="Ctrl-n", underline=1)
+        mn_file.add_command(label="Open", command=self.mn_file_open)
+        mn_file.add_command(label="Save", command=self.mn_file_save, accelerator="Ctrl-s", underline=1)
+        mn_file.add_command(label="Save-As", command=self.mn_file_saveas)
+        mn_file.add_separator()
+        mn_file.add_command(label="Exit", command=self.mn_file_exit, accelerator="Ctrl-q")
+        menubar.add_cascade(label="File", menu=mn_file)
+        mn_edit = Menu(menubar, tearoff=0)
+        mn_edit.add_command(label="Undo", command=self.mn_edit_undo, accelerator="Ctrl-z")
+        mn_edit.add_command(label="Select All", command=self.mn_edit_selall, accelerator="Ctrl-a")
+        submenu = Menu(mn_edit, tearoff=False)
+        submenu.add_command(label="Copy", command=self.mn_edit_copy, accelerator="Ctrl-c")
+        submenu.add_command(label="Paste", command=self.mn_edit_paste, accelerator="Ctrl-v")
+        mn_edit.add_cascade(label="Clipboard", menu=submenu, underline=2)
+        menubar.add_cascade(label="Edit", menu=mn_edit)
+        mn_help = Menu(menubar, tearoff=0)
+        mn_help.add_command(label="Help Index", command=self.mn_help_index)
+        mn_help.add_command(label="About…", command=self.mn_help_about)
+        menubar.add_cascade(label="Help", menu=mn_help)
+        root.config(menu=menubar) # display the menu
+
+        self.columnconfigure(1, weight=1, pad=20)
+        self.rowconfigure(1, weight=1, pad=20)
+
+        self.popup_menu = Menu(self, tearoff=0)
+        self.popup_menu.add_command(label="Copy",
+                                    command=lambda:self.clipbrd(1))
+        self.popup_menu.add_command(label="Paste",
+                                    command=lambda:self.clipbrd(2))
+        self.popup_menu.add_separator()
+        self.popup_menu.add_command(label="Cancel",
+                                    command=lambda:self.clipbrd(3))
+        self.editor.bind("<Button-3>", self.do_popup)
+
+        self.editor.bind("<Escape>", self.mn_file_exit)
+        self.editor.bind("<Control-q>", self.mn_file_exit)
+        self.editor.bind("<Control-o>", self.mn_file_open)
+        self.editor.bind("<Control-s>", self.mn_file_save)
+        self.editor.bind("<Control-n>", self.mn_file_new)
+        self.editor.bind("<Control-a>", self.mn_edit_selall)
+
+        # open a file from command - line
+        if (len(sys.argv)) > 1:
+            self.infile = sys.argv[1]
+            f_hand = open(self.infile, "r")
+            file_text = f_hand.read()
+            self.editor.insert(1.0, file_text)
+            self.editor.focus()
+            self.editor.mark_set(INSERT, "1.0")  # place cursor at 1st character in file
+            self.editor.edit_modified(False)
+            self.vlbl.set(self.infile)
+
+        # from tkinter import filedialog
+        # filename =  filedialog.askopenfilename(initialdir="/",
+        #             title = "Open file",
+        #             filetypes = (("jpeg files", "*.jpg"),("all files", "*.*")))
+        # filename = filedialog.asksaveasfilename(initialdir="/",
+        #             title = "Save file",
+        #             filetypes = (("jpeg files", "*.jpg"), ("all files", "*.*")))
+
+
+    def do_popup(self,event):
+        try:
+            self.popup_menu.tk_popup(event.x_root,
+                                     event.y_root)
+        finally:
+            self.popup_menu.grab_release()
+
+
+    def clipbrd(self, n):
+        ''' handle clipboard commands from context menu '''
+        if n == 1:  # Copy
+            if self.editor.tag_ranges("sel"):
+                root.clipboard_clear()  # clear clipboard contents
+                root.clipboard_append(self.editor.selection_get())  # copy to clipboard
+        elif n == 3:  # Cancel
+            inx = self.editor.index(INSERT)
+            self.editor.insert(inx, "")
+        else:
+            # n == 2:  # Paste
+            inx = self.editor.index(INSERT)
+            self.editor.insert(inx, root.clipboard_get())  # paste
+
+
+    def mn_file_new(self, event=None):
+        ''' Create a New editor file '''
+        if self.editor.edit_modified():  # modified
+            response = messagebox.askyesnocancel(
+                "Save?", "text was modified.\nsave changes?"
+            )
+            if response is True:
+                self.mn_file_save()
+        self.editor.delete("1.0", END)  # clear the Text widget
+        self.editor.mark_set(INSERT, "1.0")  # place cursor at 1st character in file
+        self.editor.edit_modified(False)
+        self.editor.focus()
+        self.infile = "untitled"
+        self.vlbl.set(self.infile)
+
+
+    def mn_file_open(self, event=None):
+        ''' open a file from the system and put it in the editor '''
+        f_name = filedialog.askopenfilename(
+            filetypes=(("Text files", "*.txt"), ("all files", "*"))
+        )
+        if f_name:
+            with open(f_name) as r_hand:
+                file_text = r_hand.read()
+            self.editor.delete("1.0", END)  # clear the Text widget
+            self.editor.insert("1.0", file_text)
+            self.editor.mark_set(INSERT, "1.0")  # place cursor at 1st character in file
+            self.editor.edit_modified(False)
+            self.editor.focus()
+            self.infile = f_name
+            self.vlbl.set(self.infile)
+
+
+    def mn_file_save(self, event=None):
+        ''' Save the current editor file '''
+        if self.infile == "untitled":
+            self.mn_file_saveas()  # This was a new file
+            return
+        with open(self.infile, "wb") as f_hand:
+            file_text = self.editor.get(1.0, "end-1c")
+            f_hand.write(bytes(file_text, "UTF-8"))
+        self.editor.edit_modified(False)
+
+
+    def mn_file_saveas(self, event=None):
+        ''' Save current editor file as a different filename '''
+        f_name = filedialog.asksaveasfilename(
+            confirmoverwrite=True, initialdir=os.path.dirname(os.path.abspath(__file__))
+        )
+        if f_name:
+            try:
+                with open(f_name, "w") as f:
+                    f.write(self.editor.get("1.0", END))
+                self.infile = f_name
+                self.vlbl.set(self.infile)
+                self.editor.edit_modified(False)
+            except:
+                showerror("Save File", "Failed to save file\n'%s'" % f_name)
+            return
+
+
+    def mn_file_exit(self, event=None):
+        ''' Exit the editor App '''
+        if self.editor.edit_modified():  # modified
+            response = messagebox.askyesnocancel(
+                "Save?", "text was modified.\nsave changes?"
+            )
+            if response is True:
+                self.mn_file_save()
+        save_location()
+        sys.exit()
+
+
+    def mn_edit_undo(self):
+        ''' docstring '''
+        self.editor.edit_undo()
+
+
+    def mn_edit_selall(self, event=None):
+        ''' docstring '''
+        self.editor.tag_add("sel", "1.0", "end")
+        return "break"
+
+
+    def mn_edit_copy(self, event=None):
+        ''' copy selected from editor '''
+        self.clipbrd(1)
+
+    def mn_edit_paste(self, event=None):
+        ''' paste clipboard to editor '''
+        self.clipbrd(2)
+
+
+    def mn_help_index(self):
+        ''' docstring '''
+        pass
+
+    def mn_help_about(self):
+        ''' docstring '''
+        messagebox.showinfo("editor About", "Created by me for you.")
+
+
+def save_location(e=None):
+    ''' executes at WM_DELETE_WINDOW event - see below '''
+    with open("winfo", "w") as fout:
+        fout.write(root.geometry())
+    root.destroy()
+
+# ttkthemes
+# 'alt', 'scidsand', 'classic', 'scidblue',
+# 'scidmint', 'scidgreen', 'default', 'scidpink',
+# 'arc', 'scidgrey', 'scidpurple', 'clam', 'smog'
+# 'kroc', 'black', 'clearlooks'
+# 'radiance', 'blue' : https://wiki.tcl-lang.org/page/List+of+ttk+Themes
+root = ThemedTk(theme="scidgreen")
+
+# change working directory to path for this file
+p = os.path.realpath(__file__)
+os.chdir(os.path.dirname(p))
+
+if os.path.isfile("winfo"):
+    with open("winfo") as f:
+        lcoor = f.read()
+    print(lcoor)
+    root.geometry(lcoor.strip())
+else:
+    root.geometry("400x300") # WxH+left+top
+
+root.title("Editor Demo")
+root.protocol("WM_DELETE_WINDOW", save_location)
+Sizegrip(root).place(rely=1.0, relx=1.0, x=0, y=0, anchor=SE)
+app = Application(root)
+app.mainloop()

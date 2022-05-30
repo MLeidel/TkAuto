@@ -1,9 +1,8 @@
 '''
-code file:
+code file: outtest.py
 date:
 commants:
-    tkauto generated
-
+    test for demo2
 '''
 from tkinter import *
 from tkinter.ttk import *  # defaults all widgets as ttk
@@ -14,7 +13,7 @@ from tkinter.font import Font
 # import pyperclip
 # from tkinter import filedialog
 # from tkinter import messagebox
-# from tkinter import simpledialog
+from tkinter import simpledialog
 # from functools import partial # action_w_arg = partial(self.proc_btns, n)
 from ttkthemes import ThemedTk  # ttkthemes is applied to all widgets
 
@@ -45,11 +44,46 @@ class Application(Frame):
                 padx and pady
                 sticky="nsew"
         -------------------------------------------------------- '''
-        root.geometry("200x100") # WxH+left+top
-        btn = Button(self, text="Toplevel", command=self.create_window)
-        btn.grid(row=1, column=1, sticky='nsew')
 
-    def create_window(self):
+        root.geometry("500x300")
+
+        notebk = Notebook(self)
+        tab1 = Frame(notebk, width=488, height=260)  # W & H are necessary
+        tab2 = Frame(notebk, width=488, height=260)
+        tab3 = Frame(notebk, width=488, height=260)
+        notebk.add(tab1, text='Message Widget')
+        notebk.add(tab2, text='Other Widgets')
+        notebk.add(tab3, text='Nothing Yet')
+        notebk.grid(row=1, column=1)
+
+        msgtext = '''
+Hello, this is a 'Message' widget.
+tkinter provides this for multi-line
+read-only text display.
+
+The Notebook widget is quite simple.
+TkAuto just creates a 3 tab notebook.
+It is obvious just by looking at the
+generated code what can be done to modify it.
+        '''
+        msg = Message(tab1, text=msgtext, width=360)
+        msg.grid(row=1, column=1, sticky='nwew', padx=20, pady=20)
+
+        btn1 = Button(tab2, text='Open Toplevel', command=self.create_toplevel)
+        btn1.grid(row=1, column=1, pady=10)
+
+        self.vspn = StringVar(value=0)
+        spn = Spinbox(tab2, textvariable=self.vspn,
+                      from_=0, to=10,
+                      command=self.procspin)
+        spn.grid(row=2, column=1, pady=10)
+
+        btn2 = Button(tab2, text='Open Simple Dialog', command=self.open_dialog)
+        btn2.grid(row=3, column=1, pady=5)
+
+
+
+    def create_toplevel(self):
         t = Toplevel(self)
         t.wm_title("Toplevel")
         t.geometry("200x100") # WxH+left+top
@@ -57,6 +91,21 @@ class Application(Frame):
         l.grid(row=0, column=0, padx=2, pady=20)
         tvbtn = Button(t, text=" Exit ", command=t.destroy)
         tvbtn.grid(row=2, column=0, sticky='w', padx=2, pady=4)
+
+        # # from tkinter import simpledialog
+        # simpledialog.askfloat(title, prompt)
+        # simpledialog.askinteger(title, prompt)
+        # simpledialog.askstring(title, prompt)
+        # if answer is not None:
+
+    def open_dialog(self):
+        ''' Demo a simpledialog '''
+        s = simpledialog.askstring("Demo", "Enter something")
+        print(s)
+
+    def procspin(self):
+        ''' The Spinbox value changed '''
+        print(self.vspn.get())
 
     # def eventHandler(self):
     #     pass

@@ -7,9 +7,8 @@ commants:
 '''
 from tkinter import *
 from tkinter.ttk import *  # defaults all widgets as ttk
-import os
-# from tkinter.font import Font
-    # myfont = Font(family='Lucida Console', weight = 'bold', size = 20)
+import os, sys
+from tkinter.font import Font
 # import sys
 # import webbrowser
 # import pyperclip
@@ -32,66 +31,69 @@ class Application(Frame):
         # self.columnconfigure(1, weight=1, pad=100)
         # self.rowconfigure(1, weight=1, pad=20)
 
+        # myfont = Font(family='Lucida Console', weight = 'bold', size = 20)
+
         # customize widget style when using ttk...
         # style = Style()
         # style.configure("TButton", width=10) # global
         # style.configure("my.TButton", width=10) # 'style' option
 
-        ''' OPTIONS FOR 'grid' FUNCTIONS:
-                column and row
-                columnspan and rowspan
+        ''' ONLY OPTIONS FOR 'grid' FUNCTIONS:
+                column  row
+                columnspan  rowspan
                 ipadx and ipady
                 padx and pady
-                sticky '''
+                sticky="nsew"
+        -------------------------------------------------------- '''
 
-        self.vrad1 = StringVar() # USE ONE VAR PER GROUP OF BUTTONS
-        rad1 = Radiobutton(self, variable=self.vrad1, value='radio btn 1', text='radio btn 1')
-        rad1.grid(row=1, column=1)
+        root.geometry("500x300")
 
-        self.vrad2 = StringVar() # USE ONE VAR PER GROUP OF BUTTONS
-        rad2 = Radiobutton(self, variable=self.vrad2, value='radio btn 2', text='radio btn 2')
-        rad2.grid(row=2, column=1)
+        notebk = Notebook(self)
+        tab1 = Frame(notebk, width=99, height=99)  # need W & H
+        tab2 = Frame(notebk, width=99, height=99)
+        tab3 = Frame(notebk, width=99, height=99)
+        notebk.add(tab1, text='tab 1')
+        notebk.add(tab2, text='tab 2')
+        notebk.add(tab3, text='tab 3')
+        notebk.grid(row=1, column=1)
 
-        self.vrad3 = StringVar() # USE ONE VAR PER GROUP OF BUTTONS
-        rad3 = Radiobutton(self, variable=self.vrad3, value='radio btn 3', text='radio btn 3')
-        rad3.grid(row=3, column=1)
+        msg = Message(tab1, text='')
+        msg.grid(row=1, column=1, sticky='nwew')
 
-        self.vchk1 = IntVar()
-        chk1 = Checkbutton(self, variable=self.vchk1, text='checkbox 1')
-        chk1.grid(row=1, column=2)
+        btn1 = Button(tab2, text='Open Toplevel', command=self.create_toplevel)
+        btn1.grid(row=1, column=1)
 
-        self.vchk2 = IntVar()
-        chk2 = Checkbutton(self, variable=self.vchk2, text='checkbox 2')
-        chk2.grid(row=2, column=2)
+        
+    # def create_window(self):
+    #     t = Toplevel(self)
+    #     t.wm_title("Toplevel")
+    #     t.geometry("200x100") # WxH+left+top
+    #     l = Label(t, text="This is a Toplevel Window")
+    #     l.grid(row=0, column=0, padx=2, pady=20)
+    #     tvbtn = Button(t, text=" Exit ", command=t.destroy)
+    #     tvbtn.grid(row=2, column=0, sticky='w', padx=2, pady=4)
+    
 
-        optionlist = ('aaa', 'bbb', 'ccc', 'ddd', 'eee', 'fff')
-        self.vopts = StringVar()
-        self.vopts.set(optionlist[0])
-        opts = OptionMenu(self, self.vopts, *optionlist)
-        opts.grid(row=3, column=2)
+        self.vspn = StringVar(value=0)
+        spn = Spinbox(tab2, textvariable=self.vspn, from_=0, to=10)
+        spn.grid(row=2, column=1)
 
-        lbl = Label(self, text='below is a Label')
-        lbl.grid(row=4, column=1, columnspan=2, sticky='ew')
+        
+        # # from tkinter import simpledialog
+        # simpledialog.askfloat(title, prompt)
+        # simpledialog.askinteger(title, prompt)
+        # simpledialog.askstring(title, prompt)
+        # if answer is not None:
+        
 
-        self.vtbx = StringVar()
-        # self.vtbx.trace("w", self.eventHandler)
-        tbx = Entry(self, textvariable=self.vtbx)
-        tbx.grid(row=5, column=1, columnspan=2, sticky='ew')
+        btn2 = Button(tab2, text='Open Simple Dialog', command=self.open_dialog)
+        btn2.grid(row=3, column=1)
 
-        self.vcombo = StringVar()
-        combo = Combobox(self, textvariable=self.vcombo)
-        combo['values'] = ('value1', 'value2', 'value3')
-        # COMBO.bind('<<ComboboxSelected>>', self.ONCOMBOSELECT)
-        combo.current(0)
-        combo.grid(row=6, column=1, columnspan=2, sticky='ew')
+    def create_toplevel(self):
+        ''' docstring '''
 
-        self.vsc = DoubleVar()
-        sc = Scale(self, variable=self.vsc)
-        sc.grid(row=7, column=1, columnspan=2, sticky='ew')
-        # str(self.var.get())
-
-        msg = Message(self, text='blah blah')
-        msg.grid(row=8, column=1, columnspan=2, sticky='nsew')
+    def open_dialog(self):
+        ''' docstring '''
 
 
     # def eventHandler(self):
