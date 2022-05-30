@@ -12,6 +12,7 @@ from tkinter.font import Font
 # import webbrowser
 from tkinter import filedialog
 from tkinter import messagebox
+from tkinter import simpledialog # NOTE: will NOT be styled !!!
 from tkinter.messagebox import showerror
 # from functools import partial # action_w_arg = partial(self.proc_btns, n)
 from ttkthemes import ThemedTk  # ttkthemes is applied to all widgets
@@ -22,6 +23,7 @@ class Application(Frame):
         Frame.__init__(self, parent)
         self.pack(fill=BOTH, expand=True, padx=4, pady=4)
         self.infile = ""
+        self.fontname = ""
         self.create_widgets()
 
     def create_widgets(self):
@@ -31,19 +33,31 @@ class Application(Frame):
 
         self.editor = Text(self)
         self.editor.grid(row=1, column=1, columnspan=2, sticky='nsew')
-        efont = Font(family="Andale Mono", size=12)
-        self.editor.configure(font=efont)
+        # efont = Font(family="Andale Mono", size=12)
+        # self.editor.configure(font=efont)
         self.editor.config(wrap=NONE    , # wrap=NONE
                            undo=True, # Tk 8.4
                            width=50,
                            height=20,
                            insertbackground='#000',   # cursor color
-                           tabs=(efont.measure(' ' * 4),))
+                           )
         self.editor.focus()
         
         self.scr = Scrollbar(self, orient=VERTICAL, command=self.editor.yview)
         self.scr.grid(row=1, column=3, sticky='nsw')  # use nse
         self.editor['yscrollcommand'] = self.scr.set
+
+        # get font,size to be used with Text widget
+        if os.path.isfile("font"):
+            with open("font") as f:
+                self.fontname = f.read().strip()
+        else:
+            self.fontname = "Monospace, 12"
+        fnt = self.fontname.split(",")
+        fnt = [i.strip() for i in fnt]
+        efont = Font(family=fnt[0], size=fnt[1])
+        self.editor.configure(font=efont, tabs=(efont.measure(' ' * 4),))
+
 
         self.vlbl = StringVar()  # kind of a status bar
         lblstat = Label(self, text='status…', textvariable=self.vlbl)
@@ -62,6 +76,7 @@ class Application(Frame):
         mn_edit = Menu(menubar, tearoff=0)
         mn_edit.add_command(label="Undo", command=self.mn_edit_undo, accelerator="Ctrl-z")
         mn_edit.add_command(label="Select All", command=self.mn_edit_selall, accelerator="Ctrl-a")
+        mn_edit.add_command(label="Choose Font", command=self.mn_edit_font)
         submenu = Menu(mn_edit, tearoff=False)
         submenu.add_command(label="Copy", command=self.mn_edit_copy, accelerator="Ctrl-c")
         submenu.add_command(label="Paste", command=self.mn_edit_paste, accelerator="Ctrl-v")
@@ -104,6 +119,7 @@ class Application(Frame):
             self.editor.edit_modified(False)
             self.vlbl.set(self.infile)
 
+
         # from tkinter import filedialog
         # filename =  filedialog.askopenfilename(initialdir="/",
         #             title = "Open file",
@@ -111,6 +127,21 @@ class Application(Frame):
         # filename = filedialog.asksaveasfilename(initialdir="/",
         #             title = "Save file",
         #             filetypes = (("jpeg files", "*.jpg"), ("all files", "*.*")))
+
+
+
+    def mn_edit_font(self):
+        if os.path.isfile("font"):
+            with open("font") as f:
+                self.fontname = f.read().strip()
+        self.fontname = simpledialog.askstring("Choose Font", "Current: " + self.fontname)
+        if self.fontname is not None:
+            with open("font", "w") as f:
+                f.write(self.fontname)
+            fnt = self.fontname.split(",")
+            fnt = [i.strip() for i in fnt]
+            efont = Font(family=fnt[0], size=fnt[1])
+            self.editor.configure(font=efont)
 
 
     def do_popup(self,event):
@@ -259,10 +290,10 @@ os.chdir(os.path.dirname(p))
 if os.path.isfile("winfo"):
     with open("winfo") as f:
         lcoor = f.read()
-    print(lcoor)
     root.geometry(lcoor.strip())
 else:
     root.geometry("400x300") # WxH+left+top
+
 
 root.title("Editor Demo")
 root.protocol("WM_DELETE_WINDOW", save_location)

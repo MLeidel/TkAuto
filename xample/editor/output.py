@@ -137,6 +137,14 @@ class Application(Frame):
     #         self.txt.insert(inx, pyperclip.paste())
         
 
+        
+        # # from tkinter import simpledialog
+        # simpledialog.askfloat(title, prompt)
+        # simpledialog.askinteger(title, prompt)
+        # simpledialog.askstring(title, prompt)
+        # if answer is not None:
+        
+
     def mn_file_new(self):
         ''' docstring '''
 
