@@ -229,6 +229,12 @@ app.mainloop()
 
 ---
 
+## Text Editor App
+>Here is a little more complicated example. Please note that the
+menu code (blue) was copied from an adjacent sheet as a common
+starting point for menus.
+
+
 ![alttext](images/TkAuto3.png "title")
 
 Spreadsheet template:
@@ -503,8 +509,6 @@ from tkinter import *
 from tkinter.ttk import *  # defaults all widgets as ttk
 import os, sys
 from tkinter.font import Font
-# import sys
-# import webbrowser
 from tkinter import filedialog
 from tkinter import messagebox
 from tkinter import simpledialog # NOTE: will NOT be styled !!!
@@ -523,8 +527,6 @@ class Application(Frame):
 
     def create_widgets(self):
         ''' creates GUI for app '''
-
-        #root.geometry("670x440") REMOVE THIS WHEN USING SAVED WINDOW METRICS
 
         self.editor = Text(self)
         self.editor.grid(row=1, column=1, columnspan=2, sticky='nsew')
@@ -613,16 +615,6 @@ class Application(Frame):
             self.editor.mark_set(INSERT, "1.0")  # place cursor at 1st character in file
             self.editor.edit_modified(False)
             self.vlbl.set(self.infile)
-
-
-        # from tkinter import filedialog
-        # filename =  filedialog.askopenfilename(initialdir="/",
-        #             title = "Open file",
-        #             filetypes = (("jpeg files", "*.jpg"),("all files", "*.*")))
-        # filename = filedialog.asksaveasfilename(initialdir="/",
-        #             title = "Save file",
-        #             filetypes = (("jpeg files", "*.jpg"), ("all files", "*.*")))
-
 
 
     def mn_edit_font(self):
@@ -770,12 +762,6 @@ def save_location(e=None):
         fout.write(root.geometry())
     root.destroy()
 
-# ttkthemes
-# 'alt', 'scidsand', 'classic', 'scidblue',
-# 'scidmint', 'scidgreen', 'default', 'scidpink',
-# 'arc', 'scidgrey', 'scidpurple', 'clam', 'smog'
-# 'kroc', 'black', 'clearlooks'
-# 'radiance', 'blue' : https://wiki.tcl-lang.org/page/List+of+ttk+Themes
 root = ThemedTk(theme="scidgreen")
 
 # change working directory to path for this file
