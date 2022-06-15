@@ -22,16 +22,10 @@ parser.add_argument('-o', dest='outfile', action='store',
                     default='output.py', help='output Python file')
 parser.add_argument('-x', dest='exec', action='store_true',
                     help='Execute with python3 after compile')
-parser.add_argument('filename', help='Excel (xlsx) file to use as input')
+parser.add_argument('-t', dest='template', action='store_true',
+                    help='Output just the template - layout="nofile"')
+parser.add_argument('filename', help='Excel or "nofile" for -t option')
 args = parser.parse_args()
-
-if os.path.exists(args.filename):
-    if not args.filename.endswith("xlsx"):
-        print("must be an Excel (xlsx) file.")
-        sys.exit()
-else:
-    print("cannot find file: " + args.filename)
-    sys.exit()
 
 # list (flds) index names for the (row)column values
 nop, wgt, par, var, txt, com, row, col, rsp, csp, sty, owa = 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11
@@ -140,10 +134,36 @@ def proc_menu_item():
     prt(ROUT)
 
 '''
+    Did the user request just the template?
+'''
+if args.template:
+    fout = open(args.outfile, "w")
+
+    # location of master template
+    fin = open(TPLPATH + "tkauto_tpl.py", "r")
+
+    for line in fin:
+        if line.find("INSERT TKAUTO OUTPUT") > 0:
+            continue
+        else:
+            fout.write(line)
+    fout.close()
+    fin.close()
+    sys.exit()
+
+# verify the input xlsx file
+if os.path.exists(args.filename):
+    if not args.filename.endswith("xlsx"):
+        print("must be an Excel (xlsx) file.")
+        sys.exit()
+else:
+    print("cannot find file: " + args.filename)
+    sys.exit()
+
+'''
     Get the Excel workbook and spreadsheet.
     The Excel file is expected to be in the app's directory.
 '''
-
 wb = openpyxl.load_workbook(args.filename)
 # sheet = wb.get_sheet_by_name('layout')  # Must be a Sheet titled 'layout' !
 sheet = wb.worksheets[0]  # first worksheet in the workbook
