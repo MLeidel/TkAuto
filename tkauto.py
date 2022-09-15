@@ -552,6 +552,30 @@ while(True):
     '''
         prt(line + "\n")
 
+    # CALENDAR
+    elif flds[wgt].lower() == "calendar":
+        line = "self.{0} = Calendar({2}{1})"
+        prt(line.format(flds[var], attribs, flds[par]))
+        line = "self.{0}.grid(row={1}, column={2}{3}{4}{5})\n"
+        prt(line.format(flds[var], flds[row],
+                        flds[col], rowspan, colspan, sticky))
+        line = '''
+        # self.cal = Calendar(self, selectmode="day",
+        #                     year=int(strftime('%Y')),
+        #                     month=int(strftime('%m')),
+        #                     day=int(strftime('%d')),
+        #                     width=400,
+        #                     cursor="hand1",
+        #                     date_pattern='yyyy-mm-dd')
+        ###
+        #  root.bind("<<CalendarSelected>>", self.calselected)
+        #  self.calselected(None)
+        #  date_key = self.cal.get_date()
+        ###
+        '''
+        prt(line + "\n")
+
+
     else:
         if flds[wgt].startswith("Widget"):
             pass
