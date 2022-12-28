@@ -1,0 +1,8 @@
+ttkbootstrap can be used instead of ttkthemes
+
+
+Go here for info on ttkbootstrap:
+ https://ttkbootstrap.readthedocs.io/en/latest/
+
+Use tkbauto.py with tkbauto_tpl.py
+
