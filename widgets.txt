@@ -26,3 +26,18 @@ spin
 submenu
 text
 toplevel
+---------------------
+ttkbootstrap can be used instead of ttkthemes
+
+Go here for info on ttkbootstrap:
+ https://ttkbootstrap.readthedocs.io/en/latest/
+
+and use tkbauto.py (with tkbauto_tpl.py)
+---------------------
+Go to https://github.com/MLeidel/TkAuto/blob/main/README.md
+for more info on TkAuto.
+
+M Leidel
+Wednesday December 28 2022 
+
+
