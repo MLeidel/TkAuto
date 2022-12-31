@@ -271,7 +271,8 @@ class Application(bs.Frame):
 #         fout.write(app.geometry())
 #     app.destroy()
 
-app = bs.Window("tkbauto template", "solar")
+app = bs.Window("tkbauto template", "superhero")
+app.configure(background="#2b3e50")  # superhero: bg
 
 # change working directory to path for this file
 p = os.path.realpath(__file__)

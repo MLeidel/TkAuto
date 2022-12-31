@@ -270,7 +270,8 @@ def save_location(e=None):
         fout.write(app.geometry())
     app.destroy()
 
-app = bs.Window("tkbauto template", "solar")
+app = bs.Window("tkbauto template", "lumen")
+#app.configure(bg="red")  #
 
 # change working directory to path for this file
 p = os.path.realpath(__file__)
