@@ -1,12 +1,10 @@
 '''
-code file:
-date:
-comments:
-    tkauto generated
-
+outputb0.py
+no * import for tkinter
+no need to preface functions for ttkbootstrap
 '''
 from tkinter import Listbox
-import ttkbootstrap as bs
+from ttkbootstrap import *
 from ttkbootstrap.constants import *
 import os, sys
 from tkinter.font import Font
@@ -20,10 +18,10 @@ from tkinter.font import Font
 # from tkinter import simpledialog
 # from functools import partial # action_w_arg = partial(self.proc_btns, n)
 
-class Application(bs.Frame):
+class Application(Frame):
     ''' main class docstring '''
     def __init__(self, parent):
-        bs.Frame.__init__(self, parent)
+        Frame.__init__(self, parent)
         self.pack(fill=BOTH, expand=True, padx=4, pady=4)
         self.create_widgets()
 
@@ -43,59 +41,59 @@ class Application(bs.Frame):
                 sticky="nsew"
         -------------------------------------------------------- '''
 
-        btn = bs.Button(self, text='Close', command=exit)
+        btn = Button(self, text='Close', command=exit)
         btn.grid(row=1, column=1)
 
-        self.vent =bs.StringVar()
+        self.vent =StringVar()
         # self.vent.trace("w", self.eventHandler)
-        ent = bs.Entry(self, textvariable=self.vent, width=10)
+        ent = Entry(self, textvariable=self.vent, width=10)
         ent.grid(row=2, column=1)
 
         optionlist = ('aaa', 'bbb', 'ccc', 'ddd', 'eee', 'fff')
-        self.vopt =bs.StringVar()
+        self.vopt =StringVar()
         self.vopt.set(optionlist[0])
-        opt = bs.OptionMenu(self, self.vopt, *optionlist)
+        opt = OptionMenu(self, self.vopt, *optionlist)
         opt.grid(row=3, column=1)
 
-        self.vcombo =bs.StringVar()
-        combo = bs.Combobox(self, textvariable=self.vcombo, width=10)
+        self.vcombo =StringVar()
+        combo = Combobox(self, textvariable=self.vcombo, width=10)
         combo['values'] = ('value1', 'value2', 'value3')
         # COMBO.bind('<<ComboboxSelected>>', self.ONCOMBOSELECT)
         combo.current(0)
         combo.grid(row=4, column=1, padx=6)
 
-        self.vlbl =bs.StringVar()
-        lbl = bs.Label(self, text='', textvariable=self.vlbl)
+        self.vlbl =StringVar()
+        lbl = Label(self, text='', textvariable=self.vlbl)
         lbl.grid(row=5, column=1)
         self.vlbl.set('')
 
-        self.vbar =bs.DoubleVar()
-        bar = bs.Scale(self, variable=self.vbar)
+        self.vbar =DoubleVar()
+        bar = Scale(self, variable=self.vbar)
         bar.grid(row=6, column=1)
         # str(self.var.get())
 
-        self.vchk = bs.IntVar()
-        chk = bs.Checkbutton(self, variable=self.vchk, text='check me out')
+        self.vchk = IntVar()
+        chk = Checkbutton(self, variable=self.vchk, text='check me out')
         chk.grid(row=7, column=1, pady=10)
 
-        frm = bs.Frame(self, width=100, height=100)
+        frm = Frame(self, width=100, height=100)
         frm.grid(row=8, column=1)
         
-        # lframe = bs.LabelFrame(self, text="text",
+        # lframe = LabelFrame(self, text="text",
         #                     width=100, height=100)
         # lframe.grid(row=1, column=1, sticky='nsew')
         #
         
 
-        btn2 = bs.Button(frm, text='Button', command=self.proc)
+        btn2 = Button(frm, text='Button', command=self.proc)
         btn2.grid(row=1, column=1)
 
-        self.vlbl2 =bs.StringVar()
-        lbl2 = bs.Label(frm, text='Label', textvariable=self.vlbl2)
+        self.vlbl2 =StringVar()
+        lbl2 = Label(frm, text='Label', textvariable=self.vlbl2)
         lbl2.grid(row=2, column=1)
         self.vlbl2.set('Label')
 
-        self.txt = bs.Text(self, width=16)
+        self.txt = Text(self, width=16)
         self.txt.grid(row=1, column=2, rowspan=6)
 
         
@@ -114,15 +112,15 @@ class Application(bs.Frame):
         # .insert("1.0", "New text content ...")
         
 
-        self.sctxt = bs.Scrollbar(self, orient=VERTICAL, command=self.txt.yview)
+        self.sctxt = Scrollbar(self, orient=VERTICAL, command=self.txt.yview)
         self.sctxt.grid(row=1, column=3, rowspan=6, sticky='nsw')  # use nse
         self.txt['yscrollcommand'] = self.sctxt.set
 
-        sep = bs.Separator(self)
+        sep = Separator(self)
         sep.grid(row=7, column=2, columnspan=4, sticky='ew')
 
-        menubar = bs.Menu(app)
-        mn_file = bs.Menu(menubar, tearoff=0)
+        menubar = Menu(app)
+        mn_file = Menu(menubar, tearoff=0)
         mn_file.add_command(label="New", command=self.mn_file_new, accelerator="Ctrl-n", underline=1)
         mn_file.add_command(label="Open", command=self.nm_file_open)
         mn_file.add_command(label="Save", command=self.nm_file_save, accelerator="Ctrl-s", underline=1)
@@ -130,15 +128,15 @@ class Application(bs.Frame):
         mn_file.add_separator()
         mn_file.add_command(label="Exit", command=exit, accelerator="Ctrl-q")
         menubar.add_cascade(label="File", menu=mn_file)
-        mn_edit = bs.Menu(menubar, tearoff=0)
+        mn_edit = Menu(menubar, tearoff=0)
         mn_edit.add_command(label="Undo", command=self.mn_edit_undo, accelerator="Ctrl-z")
         mn_edit.add_command(label="Select All", command=self.mn_edit_selall, accelerator="Ctrl-a")
-        submenu = bs.Menu(mn_edit, tearoff=False)
+        submenu = Menu(mn_edit, tearoff=False)
         submenu.add_command(label="Copy", command=self.mn_edit_copy, accelerator="Ctrl-c")
         submenu.add_command(label="Paste", command=self.mn_edit_paste, accelerator="Ctrl-v")
         mn_edit.add_cascade(label="Clipboard", menu=submenu, underline=2)
         menubar.add_cascade(label="Edit", menu=mn_edit)
-        mn_help = bs.Menu(menubar, tearoff=0)
+        mn_help = Menu(menubar, tearoff=0)
         mn_help.add_command(label="Help Index", command=self.mn_help_index)
         mn_help.add_command(label="About…", command=self.mn_help_about)
         menubar.add_cascade(label="Help", menu=mn_help)
@@ -152,7 +150,7 @@ class Application(bs.Frame):
         for i in range(100):
             self.lst.insert(i, "Item " + str(i))
 
-        self.sclst = bs.Scrollbar(self, orient=VERTICAL, command=self.lst.yview)
+        self.sclst = Scrollbar(self, orient=VERTICAL, command=self.lst.yview)
         self.sclst.grid(row=1, column=5, rowspan=6, sticky='nsw')  # use nse
         self.lst['yscrollcommand'] = self.sclst.set
 
@@ -181,8 +179,8 @@ class Application(bs.Frame):
     #     print("inserted at " + str(list_item[0]))
         
 
-        self.vcmbx = bs.StringVar()
-        cmbx = bs.Combobox(self, textvariable=self.vcmbx, width=6)
+        self.vcmbx = StringVar()
+        cmbx = Combobox(self, textvariable=self.vcmbx, width=6)
         cmbx['values'] = ('cosmo', 'flatly', 'litera', 'lumen',
                           'sandstone', 'yeti', 'pulse', 'darkly',
                           'superhero', 'solar', 'cyborg', 'simplex',
@@ -191,13 +189,13 @@ class Application(bs.Frame):
         cmbx.grid(row=8, column=2, sticky='ew', padx=4)
         cmbx.bind('<<ComboboxSelected>>', self.comboselected)
 
-        frm2 = bs.Frame(self)
+        frm2 = Frame(self)
         frm2.grid(row=8, column=3, columnspan=3, sticky='nsew')
 
-        self.vrad = bs.StringVar() # USE ONE VAR PER GROUP OF BUTTONS
-        radyes = bs.Radiobutton(frm2, variable=self.vrad, value='Yes', text='Yes')
+        self.vrad = StringVar() # USE ONE VAR PER GROUP OF BUTTONS
+        radyes = Radiobutton(frm2, variable=self.vrad, value='Yes', text='Yes')
         radyes.grid(row=1, column=1, sticky='we', padx=10)
-        radno = bs.Radiobutton(frm2, variable=self.vrad, value='No', text='No')
+        radno = Radiobutton(frm2, variable=self.vrad, value='No', text='No')
         radno.grid(row=2, column=1, sticky='we', padx=10)
 
     def on_select_list(self, event):
@@ -209,7 +207,7 @@ class Application(bs.Frame):
     def comboselected(self, event):
         thame = self.vcmbx.get()
         print(thame)
-        bs.Style(theme=thame)
+        Style(theme=thame)
 
     def exit(self):
         ''' docstring '''
@@ -266,7 +264,7 @@ class Application(bs.Frame):
 #         fout.write(app.geometry())
 #     app.destroy()
 
-app = bs.Window("tkbauto template", "superhero")
+app = Window("tkbauto template", "superhero")
 app.configure(background="#2b3e50")  # superhero: bg
 
 # change working directory to path for this file
@@ -283,7 +281,7 @@ os.chdir(os.path.dirname(p))
 
 
 # app.protocol("WM_DELETE_WINDOW", save_location)  # UNCOMMENT TO SAVE GEOMETRY INFO
-bs.Sizegrip(app).place(rely=1.0, relx=1.0, x=0, y=0, anchor='se')
+Sizegrip(app).place(rely=1.0, relx=1.0, x=0, y=0, anchor='se')
 # app.resizable(0, 0) # no resize & removes maximize button
 # app.minsize(w, h)  # width, height
 # app.maxsize(w, h)

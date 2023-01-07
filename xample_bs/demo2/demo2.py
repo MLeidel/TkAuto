@@ -1,29 +1,18 @@
 '''
-code file:
-date:
-comments:
-    tkauto generated
-
+Notebook, simpledialog, Message, Toplevel
 '''
-from tkinter import *
-import ttkbootstrap as bs
+from ttkbootstrap import *
 from ttkbootstrap.constants import *
 import os, sys
 from tkinter.font import Font
-# from tkcalendar import *
-# from time import gmtime, strftime
-# import sys
-# import webbrowser
-# import pyperclip
-# from tkinter import filedialog
-# from tkinter import messagebox
 from tkinter import simpledialog
-# from functools import partial # action_w_arg = partial(self.proc_btns, n)
+from tkinter import Message
 
-class Application(bs.Frame):
+
+class Application(Frame):
     ''' main class docstring '''
     def __init__(self, parent):
-        bs.Frame.__init__(self, parent)
+        Frame.__init__(self, parent)
         self.pack(fill=BOTH, expand=True, padx=4, pady=4)
         self.create_widgets()
 
@@ -43,10 +32,10 @@ class Application(bs.Frame):
                 sticky="nsew"
         -------------------------------------------------------- '''
 
-        notebk = bs.Notebook(self)
-        tab1 = bs.Frame(notebk, width=99, height=99)  # need W & H
-        tab2 = bs.Frame(notebk, width=99, height=99)
-        tab3 = bs.Frame(notebk, width=99, height=99)
+        notebk = Notebook(self)
+        tab1 = Frame(notebk, width=99, height=99)  # need W & H
+        tab2 = Frame(notebk, width=99, height=99)
+        tab3 = Frame(notebk, width=99, height=99)
         notebk.add(tab1, text='Message Widget')
         notebk.add(tab2, text='Other Widgets')
         notebk.add(tab3, text='Nothing Yet')
@@ -67,25 +56,25 @@ generated code what can be done to modify it.
         msg = Message(tab1, text=msgtext, width=360)
         msg.grid(row=1, column=1, sticky='nwew', padx=20, pady=20)
 
-        btn1 = bs.Button(tab2, text='Open Toplevel',
+        btn1 = Button(tab2, text='Open Toplevel',
                          command=self.create_toplevel)
         btn1.grid(row=1, column=1, pady=10)
 
-        self.vspn = bs.StringVar(value=0)
-        spn = bs.Spinbox(tab2, textvariable=self.vspn,
+        self.vspn = StringVar(value=0)
+        spn = Spinbox(tab2, textvariable=self.vspn,
                          from_=0, to=10,
                          command=self.procspin)
         spn.grid(row=2, column=1, pady=10)
 
-        btn2 = bs.Button(tab2, text='Open Simple Dialog', command=self.open_dialog)
+        btn2 = Button(tab2, text='Open Simple Dialog', command=self.open_dialog)
         btn2.grid(row=3, column=1, pady=5)
 
-        self.vspn = bs.StringVar(value=0)
-        spn = bs.Spinbox(tab2, textvariable=self.vspn, from_=0, to=10)
+        self.vspn = StringVar(value=0)
+        spn = Spinbox(tab2, textvariable=self.vspn, from_=0, to=10)
         spn.grid(row=2, column=1)
 
     def create_toplevel(self):
-        t = bs.Toplevel(self)
+        t = Toplevel(self)
         t.wm_title("Toplevel")
         t.geometry("200x100") # WxH+left+top
         l = Label(t, text="This is a Toplevel Window")
@@ -117,7 +106,7 @@ generated code what can be done to modify it.
 #         fout.write(app.geometry())
 #     app.destroy()
 
-app = bs.Window("tkbauto template", "solar")
+app = Window("tkbauto template", "solar")
 
 # change working directory to path for this file
 p = os.path.realpath(__file__)
@@ -133,7 +122,7 @@ os.chdir(os.path.dirname(p))
 
 
 # app.protocol("WM_DELETE_WINDOW", save_location)  # UNCOMMENT TO SAVE GEOMETRY INFO
-bs.Sizegrip(app).place(rely=1.0, relx=1.0, x=0, y=0, anchor='se')
+Sizegrip(app).place(rely=1.0, relx=1.0, x=0, y=0, anchor='se')
 # app.resizable(0, 0) # no resize & removes maximize button
 # app.minsize(w, h)  # width, height
 # app.maxsize(w, h)

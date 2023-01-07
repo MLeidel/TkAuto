@@ -1,12 +1,8 @@
 '''
-code file: editorbs.py
-date:
-comments:
-    tkauto generated
+Test editor
 
 '''
-from tkinter import *
-import ttkbootstrap as bs
+from ttkbootstrap import *
 from ttkbootstrap.constants import *
 import os, sys
 from tkinter.font import Font
@@ -15,10 +11,10 @@ from tkinter import messagebox
 from tkinter import simpledialog # NOTE: will NOT be styled !!!
 from tkinter.messagebox import showerror
 
-class Application(bs.Frame):
+class Application(Frame):
     ''' main class docstring '''
     def __init__(self, parent):
-        bs.Frame.__init__(self, parent)
+        Frame.__init__(self, parent)
         self.pack(fill=BOTH, expand=True, padx=4, pady=4)
         self.create_widgets()
 
@@ -65,7 +61,7 @@ class Application(bs.Frame):
         # .insert("1.0", "New text content ...")
         
 
-        self.scr = bs.Scrollbar(self, orient=VERTICAL, command=self.editor.yview)
+        self.scr = Scrollbar(self, orient=VERTICAL, command=self.editor.yview)
         self.scr.grid(row=1, column=3, sticky='nsw')  # use nse
         self.editor['yscrollcommand'] = self.scr.set
 
@@ -80,8 +76,8 @@ class Application(bs.Frame):
         efont = Font(family=fnt[0], size=fnt[1])
         self.editor.configure(font=efont, tabs=(efont.measure(' ' * 4),))
 
-        self.vlbl = bs.StringVar()
-        lblstat = bs.Label(self, text='status…', textvariable=self.vlbl)
+        self.vlbl = StringVar()
+        lblstat = Label(self, text='status…', textvariable=self.vlbl)
         lblstat.grid(row=3, column=1, columnspan=3, sticky='ew')
         self.vlbl.set('status…')
 
@@ -270,7 +266,7 @@ def save_location(e=None):
         fout.write(app.geometry())
     app.destroy()
 
-app = bs.Window("tkbauto template", "lumen")
+app = Window("tkbauto template", "superhero")
 #app.configure(bg="red")  #
 
 # change working directory to path for this file
@@ -287,7 +283,7 @@ else:
 
 
 # app.protocol("WM_DELETE_WINDOW", save_location)  # UNCOMMENT TO SAVE GEOMETRY INFO
-bs.Sizegrip(app).place(rely=1.0, relx=1.0, x=0, y=0, anchor='se')
+Sizegrip(app).place(rely=1.0, relx=1.0, x=0, y=0, anchor='se')
 # app.resizable(0, 0) # no resize & removes maximize button
 # app.minsize(w, h)  # width, height
 # app.maxsize(w, h)
