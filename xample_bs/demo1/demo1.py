@@ -1,5 +1,5 @@
 '''
-outputb0.py
+demo1.py
 no * import for tkinter
 no need to preface functions for ttkbootstrap
 '''
@@ -8,15 +8,7 @@ from ttkbootstrap import *
 from ttkbootstrap.constants import *
 import os, sys
 from tkinter.font import Font
-# from tkcalendar import *
-# from time import gmtime, strftime
-# import sys
-# import webbrowser
-# import pyperclip
-# from tkinter import filedialog
-# from tkinter import messagebox
-# from tkinter import simpledialog
-# from functools import partial # action_w_arg = partial(self.proc_btns, n)
+
 
 class Application(Frame):
     ''' main class docstring '''
@@ -153,38 +145,12 @@ class Application(Frame):
         self.sclst = Scrollbar(self, orient=VERTICAL, command=self.lst.yview)
         self.sclst.grid(row=1, column=5, rowspan=6, sticky='nsw')  # use nse
         self.lst['yscrollcommand'] = self.sclst.set
-
-
-    ## Handler for List selection
-    ## Make this a class method
-    # def on_select_list(self, event):
-    #     list_item = self.LISTBOX.curselection()
-    #     fp = self.LISTBOX.get(list_item[0])
-    #     print(str(fp) + " --> " + str(list_item[0]) +
-    #         " of " + str(self.LISTBOX.size()))
-    #
-    # FUNCS TO EDIT LISTBOX CONTENTS
-    #
-    # def delete_item(self):
-    #     if self.listbox.curselection() == ():
-    #         return # nothing selected
-    #     print("Deleting: " + str(self.listbox.curselection()))
-    #     self.listbox.delete(self.listbox.curselection())
-
-    # def insert_item(self):
-    #     if self.listbox.curselection() == ():
-    #         return # nothing selected
-    #     list_item = self.listbox.curselection()
-    #     self.listbox.insert(list_item[0], self.txtfld.get())
-    #     print("inserted at " + str(list_item[0]))
         
 
         self.vcmbx = StringVar()
         cmbx = Combobox(self, textvariable=self.vcmbx, width=6)
-        cmbx['values'] = ('cosmo', 'flatly', 'litera', 'lumen',
-                          'sandstone', 'yeti', 'pulse', 'darkly',
-                          'superhero', 'solar', 'cyborg', 'simplex',
-                          'morph', 'journal')
+        cmbx['values'] = app.style.theme_names()
+
         cmbx.current(0)
         cmbx.grid(row=8, column=2, sticky='ew', padx=4)
         cmbx.bind('<<ComboboxSelected>>', self.comboselected)

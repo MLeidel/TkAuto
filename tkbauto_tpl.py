@@ -3,27 +3,23 @@ code file:
 date:
 comments:
     tkauto generated
-
 '''
-from tkinter import *
-import ttkbootstrap as bs
+from ttkbootstrap import *
 from ttkbootstrap.constants import *
 import os, sys
 from tkinter.font import Font
-# from tkcalendar import *
-# from time import gmtime, strftime
-# import sys
-# import webbrowser
-# import pyperclip
+# from tkinter import Listbox
 # from tkinter import filedialog
 # from tkinter import messagebox
 # from tkinter import simpledialog
+# import webbrowser
 # from functools import partial # action_w_arg = partial(self.proc_btns, n)
+# from time import gmtime, strftime
 
-class Application(bs.Frame):
+class Application(Frame):
     ''' main class docstring '''
     def __init__(self, parent):
-        bs.Frame.__init__(self, parent)
+        Frame.__init__(self, parent)
         self.pack(fill=BOTH, expand=True, padx=4, pady=4)
         self.create_widgets()
 
@@ -50,7 +46,6 @@ class Application(bs.Frame):
 
     # def eventHandler(self):
     #     pass
-
 #
 
 # UNCOMMENT THE FOLLOWING TO SAVE GEOMETRY INFO
@@ -60,7 +55,7 @@ class Application(bs.Frame):
 #         fout.write(app.geometry())
 #     app.destroy()
 
-app = bs.Window("tkbauto template", "solar")
+app = Window("tkbauto template", "solar")
 
 # change working directory to path for this file
 p = os.path.realpath(__file__)
@@ -76,7 +71,7 @@ os.chdir(os.path.dirname(p))
 
 
 # app.protocol("WM_DELETE_WINDOW", save_location)  # UNCOMMENT TO SAVE GEOMETRY INFO
-bs.Sizegrip(app).place(rely=1.0, relx=1.0, x=0, y=0, anchor='se')
+Sizegrip(app).place(rely=1.0, relx=1.0, x=0, y=0, anchor='se')
 # app.resizable(0, 0) # no resize & removes maximize button
 # app.minsize(w, h)  # width, height
 # app.maxsize(w, h)
