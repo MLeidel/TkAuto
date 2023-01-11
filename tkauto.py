@@ -3,17 +3,28 @@ tkauto.py
 Python console program
 Author: Michael Leidel
 Description:
-Builds a Python tkinter application shell from an
-xlsx file (layout_tpl.xlsx) with these columns:
-see layout_tpl.xlsx
-May 2022 - add "parent" column
+Builds a Python tkinter application shell from an xlsx file.
+
+usage: tkauto.py [-h] [-o OUTFILE] [-x] [-t] [-b] filename
+
+positional arguments:
+  filename    Excel or "nofile" for -t option
+
+options:
+  -h, --help  show this help message and exit
+  -o OUTFILE  output Python file
+  -x          Execute with python3 after compile
+  -t          Output just the template - layout="nofile"
+  -b          Use ttkbootstrap template: tkbauto_tpl.py
 '''
 import os
 import sys
 import argparse
 import openpyxl
 
-# tkauto_tpl.py code template must be in same directory as this script
+# tkauto_tpl.py & tkbauto_tpl.py code templates
+#   must be in same directory as this script
+# This sets the path.
 p = os.path.realpath(__file__)
 TPLPATH = os.path.dirname(p) + "/"
 
@@ -24,6 +35,8 @@ parser.add_argument('-x', dest='exec', action='store_true',
                     help='Execute with python3 after compile')
 parser.add_argument('-t', dest='template', action='store_true',
                     help='Output just the template - layout="nofile"')
+parser.add_argument('-b', dest='bstrap', action='store_true',
+                    help='Use ttkbootstrap template: tkbauto_tpl.py')
 parser.add_argument('filename', help='Excel or "nofile" for -t option')
 args = parser.parse_args()
 
@@ -139,8 +152,11 @@ def proc_menu_item():
 if args.template:
     fout = open(args.outfile, "w")
 
-    # location of master template
-    fin = open(TPLPATH + "tkauto_tpl.py", "r")
+    # location of master templates
+    if args.bstrap:
+        fin = open(TPLPATH + "tkbauto_tpl.py", "r")
+    else:
+        fin = open(TPLPATH + "tkauto_tpl.py", "r")
 
     for line in fin:
         if line.find("INSERT TKAUTO OUTPUT") > 0:
@@ -588,8 +604,11 @@ while(True):
 
 fout = open(args.outfile, "w")
 
-# location of master template
-fin = open(TPLPATH + "tkauto_tpl.py", "r")
+# location of master templates
+if args.bstrap:
+    fin = open(TPLPATH + "tkbauto_tpl.py", "r")
+else:
+    fin = open(TPLPATH + "tkauto_tpl.py", "r")
 
 for line in fin:
     if line.find("INSERT TKAUTO OUTPUT") > 0:

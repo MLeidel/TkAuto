@@ -19,8 +19,8 @@ class Application(Frame):
     def create_widgets(self):
         ''' creates GUI for app '''
         # expand widget to fill the grid
-        # self.columnconfigure(1, weight=1, pad=100)
-        # self.rowconfigure(1, weight=1, pad=20)
+        self.columnconfigure(1, weight=1, pad=100)
+        self.rowconfigure(1, weight=1, pad=20)
 
         # myfont = Font(family='Lucida Console', weight = 'bold', size = 20)
 
