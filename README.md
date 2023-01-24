@@ -1,5 +1,7 @@
 # tkauto
 
+## Now generates code for ttkthemed and ttkbootstrap
+
 ### Why not use a GRID to set up a tkinter GRID layout ?
 
 ![drawing](images/tkauto_draw_3000.jpg "title")
@@ -243,16 +245,18 @@ Spreadsheet template:
 ## Generate ttk tkinter starter script
 
 ```python
-usage: tkauto.py [-h] [-o OUTFILE] [-x] filename
+usage: tkauto.py [-h] [-x] [-t] [-b] filename
+
+tkauto build Python tkinter GUI
 
 positional arguments:
-  filename    Excel file to use as input
+  filename    Excel or "nofile" for -t option
 
-optional arguments:
+options:
   -h, --help  show this help message and exit
-  -o OUTFILE  output Python file
   -x          Execute with python3 after compile
-  -t          output template code only "nofile"
+  -t          Output just the template - layout="nofile"
+  -b          Use ttkbootstrap template: tkbauto_tpl.py
 
 ```
 Example:
