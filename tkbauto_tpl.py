@@ -48,18 +48,24 @@ class Application(Frame):
     #     pass
 #
 
+
+# change working directory to path for this file
+p = os.path.realpath(__file__)
+os.chdir(os.path.dirname(p))
+
+# THEMES
+# 'cosmo', 'flatly', 'litera', 'minty', 'lumen',
+# 'sandstone', 'yeti', 'pulse', 'united', 'morph',
+# 'journal', 'darkly', 'superhero', 'solar', 'cyborg',
+# 'vapor', 'simplex', 'cerculean'
+root = Window("template", "superhero")
+
 # UNCOMMENT THE FOLLOWING TO SAVE GEOMETRY INFO
 # def save_location(e=None):
 #     ''' executes at WM_DELETE_WINDOW event - see below '''
 #     with open("winfo", "w") as fout:
 #         fout.write(root.geometry())
 #     root.destroy()
-
-root = Window("tkbauto template", "superhero")
-
-# change working directory to path for this file
-p = os.path.realpath(__file__)
-os.chdir(os.path.dirname(p))
 
 # UNCOMMENT THE FOLLOWING TO SAVE GEOMETRY INFO
 # if os.path.isfile("winfo"):

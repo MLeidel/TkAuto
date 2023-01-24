@@ -12,7 +12,6 @@ from tkinter import Listbox
 # from tkinter import filedialog
 # from tkinter import messagebox
 # from tkinter import simpledialog
-# from tkdate import date_pick
 # import webbrowser
 # from functools import partial # action_w_arg = partial(self.proc_btns, n)
 # from time import gmtime, strftime
@@ -106,10 +105,15 @@ class Application(Frame):
         #                    insertbackground='#000',   # cursor color
         #                    tabs=(efont.measure(' ' * 4),))
         # self.EDITOR.focus()
-        ## basic handler commands #
+        ## basic Text widget commands #
         # .get("1.0", END)
         # .delete("1.0", END)
         # .insert("1.0", "New text content ...")
+        ## Select All
+        # .tag_add(SEL, '1.0', END)
+        # .mark_set(INSERT, '1.0')
+        # .see(INSERT)
+
         
 
         self.sctxt = Scrollbar(self, orient=VERTICAL, command=self.txt.yview)
@@ -143,36 +147,35 @@ class Application(Frame):
         root.config(menu=menubar) # display the menu
 
 
-        self.lst = Listbox(self)
+        self.lst = Listbox(self, exportselection=False)
         self.lst.grid(row=1, column=4, rowspan=6, sticky='nsew')
         
         # self.LISTBOX.bind("<<ListboxSelect>>", self.on_select_list)
         # for i in range(100):
-        #     self.LISTBOX.insert(i, "Item " + str(i))
+        #     self.LISTBOX.insert(END, "Item " + str(i))
         
-    ## Handler for List selection
-    ## Make this a class method
+    # HANDLER FOR LIST SELECTION
     # def on_select_list(self, event):
-    #     list_item = self.LISTBOX.curselection()
-    #     fp = self.LISTBOX.get(list_item[0])
-    #     print(str(fp) + " --> " + str(list_item[0]) +
-    #         " of " + str(self.LISTBOX.size()))
+    #     list_item = self.LISTBOX.get(ANCHOR)
+    #     list_inx = self.LISTBOX.index(ANCHOR)
+    #     print(list_item, str(list_inx) +
+    #           " of " + str(self.LISTBOX.size()))
     #
-    # FUNCS TO EDIT LISTBOX CONTENTS
+    # HANDLERS FOR EDITING LISTBOX
     #
     # def delete_item(self):
-    #     if self.listbox.curselection() == ():
-    #         return # nothing selected
-    #     print("Deleting: " + str(self.listbox.curselection()))
-    #     self.listbox.delete(self.listbox.curselection())
-
+    #     if self.LISTBOX.curselection() == ():
+    #         return  # nothing selected
+    #     print("Deleting: " + self.LISTBOX.get(ANCHOR))
+    #     self.LISTBOX.delete(self.LISTBOX.index(ANCHOR))
+    #
     # def insert_item(self):
-    #     if self.listbox.curselection() == ():
-    #         return # nothing selected
-    #     list_item = self.listbox.curselection()
-    #     self.listbox.insert(list_item[0], self.txtfld.get())
-    #     print("inserted at " + str(list_item[0]))
-        
+    #     if self.LISTBOX.curselection() == ():
+    #         return  # nothing selected
+    #     list_item = self.LISTBOX.get(ANCHOR)
+    #     list_inx = self.LISTBOX.index(ANCHOR)
+    #     self.LISTBOX.insert(list_inx, "Inserted this")
+    #     print("inserted at " + str(list_inx))
 
         self.sclst = Scrollbar(self, orient=VERTICAL, command=self.lst.yview)
         self.sclst.grid(row=1, column=5, rowspan=6, sticky='nsw')  # use nse

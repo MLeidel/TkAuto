@@ -5,14 +5,13 @@ Author: Michael Leidel
 Description:
 Builds a Python tkinter application shell from an xlsx file.
 
-usage: tkauto.py [-h] [-o OUTFILE] [-x] [-t] [-b] filename
+usage: tkauto.py [-h] [-x] [-t] [-b] filename
 
 positional arguments:
   filename    Excel or "nofile" for -t option
 
 options:
   -h, --help  show this help message and exit
-  -o OUTFILE  output Python file
   -x          Execute with python3 after compile
   -t          Output just the template - layout="nofile"
   -b          Use ttkbootstrap template: tkbauto_tpl.py
@@ -22,6 +21,8 @@ import sys
 import argparse
 import openpyxl
 
+outFile = "output.py"  # default output file name
+
 # tkauto_tpl.py & tkbauto_tpl.py code templates
 #   must be in same directory as this script
 # This sets the path.
@@ -29,8 +30,6 @@ p = os.path.realpath(__file__)
 TPLPATH = os.path.dirname(p) + "/"
 
 parser = argparse.ArgumentParser(description='tkauto build Python tkinter GUI')
-parser.add_argument('-o', dest='outfile', action='store',
-                    default='output.py', help='output Python file')
 parser.add_argument('-x', dest='exec', action='store_true',
                     help='Execute with python3 after compile')
 parser.add_argument('-t', dest='template', action='store_true',
@@ -150,7 +149,7 @@ def proc_menu_item():
     Did the user request just the template?
 '''
 if args.template:
-    fout = open(args.outfile, "w")
+    fout = open(outFile, "w")
 
     # location of master templates
     if args.bstrap:
@@ -166,6 +165,7 @@ if args.template:
     fout.close()
     fin.close()
     sys.exit()
+
 
 # verify the input xlsx file
 if os.path.exists(args.filename):
@@ -282,16 +282,21 @@ while(True):
         #                    insertbackground='#000',   # cursor color
         #                    tabs=(efont.measure(' ' * 4),))
         # self.EDITOR.focus()
-        ## basic handler commands #
+        ## basic Text widget commands #
         # .get("1.0", END)
         # .delete("1.0", END)
         # .insert("1.0", "New text content ...")
+        ## Select All
+        # .tag_add(SEL, '1.0', END)
+        # .mark_set(INSERT, '1.0')
+        # .see(INSERT)
+
         '''
         prt(line + "\n")
 
     # LIST
     elif flds[wgt].lower().startswith("list"):
-        line = "self.{0} = Listbox({2}{1})"
+        line = "self.{0} = Listbox({2}{1}, exportselection=False)"
         prt(line.format(flds[var], attribs, flds[par]))
         rowspan = getRowSpan(flds[rsp])
         line = "self.{0}.grid(row={1}, column={2}{3}{4}{5})"
@@ -301,33 +306,32 @@ while(True):
         line = '''
         # self.LISTBOX.bind("<<ListboxSelect>>", self.on_select_list)
         # for i in range(100):
-        #     self.LISTBOX.insert(i, "Item " + str(i))'''
+        #     self.LISTBOX.insert(END, "Item " + str(i))'''
         prt(line)
 
         line = '''
-    ## Handler for List selection
-    ## Make this a class method
+    # HANDLER FOR LIST SELECTION
     # def on_select_list(self, event):
-    #     list_item = self.LISTBOX.curselection()
-    #     fp = self.LISTBOX.get(list_item[0])
-    #     print(str(fp) + " --> " + str(list_item[0]) +
-    #         " of " + str(self.LISTBOX.size()))
+    #     list_item = self.LISTBOX.get(ANCHOR)
+    #     list_inx = self.LISTBOX.index(ANCHOR)
+    #     print(list_item, str(list_inx) +
+    #           " of " + str(self.LISTBOX.size()))
     #
-    # FUNCS TO EDIT LISTBOX CONTENTS
+    # HANDLERS FOR EDITING LISTBOX
     #
     # def delete_item(self):
-    #     if self.listbox.curselection() == ():
-    #         return # nothing selected
-    #     print("Deleting: " + str(self.listbox.curselection()))
-    #     self.listbox.delete(self.listbox.curselection())
-
+    #     if self.LISTBOX.curselection() == ():
+    #         return  # nothing selected
+    #     print("Deleting: " + self.LISTBOX.get(ANCHOR))
+    #     self.LISTBOX.delete(self.LISTBOX.index(ANCHOR))
+    #
     # def insert_item(self):
-    #     if self.listbox.curselection() == ():
-    #         return # nothing selected
-    #     list_item = self.listbox.curselection()
-    #     self.listbox.insert(list_item[0], self.txtfld.get())
-    #     print("inserted at " + str(list_item[0]))
-        '''
+    #     if self.LISTBOX.curselection() == ():
+    #         return  # nothing selected
+    #     list_item = self.LISTBOX.get(ANCHOR)
+    #     list_inx = self.LISTBOX.index(ANCHOR)
+    #     self.LISTBOX.insert(list_inx, "Inserted this")
+    #     print("inserted at " + str(list_inx)) '''
         prt(line + "\n")
 
 
@@ -602,7 +606,7 @@ while(True):
     rownum += 1  # increment loop through spreadsheet
 
 
-fout = open(args.outfile, "w")
+fout = open(outFile, "w")
 
 # location of master templates
 if args.bstrap:
@@ -627,5 +631,5 @@ print("\n\nFind new script in 'output.py'\n")
 print("Some Widgets may need futher definition\n\n")
 
 if args.exec:
-    comline = "python3 " + args.outfile
+    comline = "python3 " + outFile
     os.system(comline)

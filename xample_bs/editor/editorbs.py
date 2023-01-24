@@ -24,18 +24,6 @@ class Application(Frame):
         self.columnconfigure(1, weight=1, pad=100)
         self.rowconfigure(1, weight=1, pad=20)
 
-        # myfont = Font(family='Lucida Console', weight = 'bold', size = 20)
-
-        ''' ONLY OPTIONS FOR 'grid' FUNCTIONS:
-                column  row
-                columnspan  rowspan
-                ipadx and ipady
-                padx and pady
-                sticky="nsew"
-        -------------------------------------------------------- '''
-
-        #app.geometry("500x400")
-
         self.editor = Text(self)
         self.editor.grid(row=1, column=1, columnspan=2, sticky='nsew')
         self.editor.config(wrap=NONE    , # wrap=NONE
@@ -44,22 +32,6 @@ class Application(Frame):
                            height=20,
                            )
         self.editor.focus()
-
-        # efont = Font(family="Helvetica", size=14)
-        # self.EDITOR.configure(font=efont)
-        # self.EDITOR.config(wrap="word", # wrap=NONE
-        #                    undo=True, # Tk 8.4
-        #                    width=50,
-        #                    height=12,
-        #                    padx=5, # inner margin
-        #                    insertbackground='#000',   # cursor color
-        #                    tabs=(efont.measure(' ' * 4),))
-        # self.EDITOR.focus()
-        ## basic handler commands #
-        # .get("1.0", END)
-        # .delete("1.0", END)
-        # .insert("1.0", "New text content ...")
-        
 
         self.scr = Scrollbar(self, orient=VERTICAL, command=self.editor.yview)
         self.scr.grid(row=1, column=3, sticky='nsw')  # use nse
@@ -77,7 +49,8 @@ class Application(Frame):
         self.editor.configure(font=efont, tabs=(efont.measure(' ' * 4),))
 
         self.vlbl = StringVar()
-        lblstat = Label(self, text='status…', textvariable=self.vlbl)
+        lblstat = Entry(self, text='status…',
+                        textvariable=self.vlbl, state=ACTIVE) # or DISABLED
         lblstat.grid(row=3, column=1, columnspan=3, sticky='ew')
         self.vlbl.set('status…')
 
