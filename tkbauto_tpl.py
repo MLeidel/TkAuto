@@ -13,6 +13,8 @@ from ttkbootstrap.constants import *
 # from tkinter import messagebox
 # from tkinter import simpledialog
 # import webbrowser
+# from ttkbootstrap.tooltip import ToolTip
+# from ttkbootstrap.dialogs import Querybox  # get_date, get_font ...
 # from functools import partial # action_w_arg = partial(self.proc_btns, n)
 # from time import gmtime, strftime
 

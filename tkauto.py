@@ -42,7 +42,12 @@ args = parser.parse_args()
 # list (flds) index names for the (row)column values
 nop, wgt, par, var, txt, com, row, col, rsp, csp, sty, owa = 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11
 
+# the following used for error messages
+colname = ['nop', 'wgt', 'parent', 'object variable', 'text', 'command', 'row', 'col']
+
 sout = ""  # holds output for injection into template
+
+errors = False  # detected missing required widget option(s)
 
 # Menu Only: list (flds) index names for the (row)column values
 nop, mid, lbl, cmd, acc, und = 0, 1, 2, 3, 4, 5
@@ -84,6 +89,17 @@ def getAttrib(val):
         # spreadsheets don't always use plain text
         atts = ", " + val.replace("’", "'").replace('”', '"')
     return atts
+
+def checkcols(fields):
+    ''' check for required values in the layout spreadsheet columns
+        each widget will have different required options '''
+    global errors
+    for item in fields:
+        if flds[item] == "":
+            print(f">>>>>>>>> {flds[1]} widget missing required option: {colname[item]}")
+            errors = True
+            return
+
 
 # PROCESS MENU ITEMS
 
@@ -189,6 +205,8 @@ domenu = False
 
 #
 rownum = 3
+print("TkAuto Starting -------------------------------------->")
+
 while(True):
     # nothing in col 1 end the loop
     if sheet.cell(row=rownum, column=1).value is None:
@@ -222,13 +240,15 @@ while(True):
     print(flds[wgt])
 
     # These will be set to the formatted code or ""
-    attribs = getAttrib(flds[owa])
+    attribs = getAttrib(flds[owa])  # Other Widget Attributes
     rowspan = getRowSpan(flds[rsp])
     colspan = getColSpan(flds[csp])
     sticky = getSticky(flds[sty])
 
+
     # BUTTON
     if flds[wgt].lower() == "button":
+        checkcols([2,3,4,5,6,7])
         line = "{0} = Button({4}, text='{1}', command=self.{2}{3})"
         prt(line.format(flds[var], flds[txt], flds[com], attribs, flds[par]))
         callbacks.append(flds[com])
@@ -238,6 +258,7 @@ while(True):
 
     # LABEL
     elif flds[wgt].lower() == "label":
+        checkcols([2,3,5,6,7])
         if flds[com] != "":  # a StringVar was given
             prt("self." + flds[com] + " = StringVar()")
             line = "{0} = Label({4}, text='{1}', textvariable=self.{2}{3})"
@@ -256,6 +277,7 @@ while(True):
 
     # ENTRY
     elif flds[wgt].lower() == "entry":
+        checkcols([2,3,5,6,7])
         prt("self." + flds[com] + " = StringVar()")
         prt("# self." + flds[com] + ".trace(\"w\", self.eventHandler)")
         line = "{0} = Entry({3}, textvariable=self.{1}{2})"
@@ -266,6 +288,7 @@ while(True):
 
     # TEXT
     elif flds[wgt].lower() == "text":
+        checkcols([2,3,6,7])
         line = "self.{0} = Text({2}{1})"
         prt(line.format(flds[var], attribs, flds[par]))
         line = "self.{0}.grid(row={1}, column={2}{3}{4}{5})\n"
@@ -296,6 +319,7 @@ while(True):
 
     # LIST
     elif flds[wgt].lower().startswith("list"):
+        checkcols([2,3,6,7])
         line = "self.{0} = Listbox({2}{1}, exportselection=False)"
         prt(line.format(flds[var], attribs, flds[par]))
         rowspan = getRowSpan(flds[rsp])
@@ -337,6 +361,7 @@ while(True):
 
     # VERT SCROLLBAR
     elif flds[wgt].lower() == "scrolly":
+        checkcols([2,3,5,6,7])
         line = "self.{0} = Scrollbar({2}, orient=VERTICAL, command=self.{1}.yview)"
         if flds[com] == "":
             print("\n\nMISSING list object FOR SCROLLBAR WIDGET\n\n")
@@ -350,6 +375,7 @@ while(True):
 
     # HORZ SCROLLBAR
     elif flds[wgt].lower() == "scrollx":
+        checkcols([2,3,5,6,7])
         line = "self.{0} = Scrollbar({2}, orient=HORIZONTAL, command=self.{1}.xview)"
         if flds[com] == "":
             print("\n\nMISSING list/text object FOR SCROLLBAR WIDGET\n\n")
@@ -363,6 +389,7 @@ while(True):
 
     # CHECK BOX
     elif flds[wgt].lower().startswith("check"):
+        checkcols([2,3,4,5,6,7])
         prt("self.{0} = IntVar()".format(flds[com]))
         line = "{0} = Checkbutton({4}, variable=self.{1}, text='{2}'{3})"
         prt(line.format(flds[var], flds[com], flds[txt], attribs, flds[par]))
@@ -371,6 +398,7 @@ while(True):
                         flds[col], rowspan, colspan, sticky))
     # RADIO BUTTON
     elif flds[wgt].lower().startswith("radio"):
+        checkcols([2,3,4,5,6,7])
         prt("self." + flds[com] +
             " = StringVar() # USE ONE VAR PER GROUP OF BUTTONS")
         line = "{0} = Radiobutton({5}, variable=self.{1}, value='{2}', text='{2}'{4})"
@@ -380,6 +408,7 @@ while(True):
                         flds[col], rowspan, colspan, sticky))
     # SPIN BOX
     elif flds[wgt].lower().startswith("spin"):
+        checkcols([2,3,5,6,7])
         prt("self." + flds[com] + " = StringVar(value=0)")
         line = "{0} = Spinbox({3}, textvariable=self.{1}, from_=0, to=10{2})"
         prt(line.format(flds[var], flds[com], attribs, flds[par]))
@@ -388,6 +417,7 @@ while(True):
                         flds[col], rowspan, colspan, sticky))
     # OPTION MENU
     elif flds[wgt].lower().startswith("option"):
+        checkcols([2,3,5,6,7])
         prt("optionlist = ('aaa', 'bbb', 'ccc', 'ddd', 'eee', 'fff')")
         prt("self." + flds[com] + " = StringVar()")
         prt("self." + flds[com] + ".set(optionlist[0])")
@@ -399,6 +429,7 @@ while(True):
 
     # COMBOBOX (from tkinter.ttk import Combobox)
     elif flds[wgt].lower().startswith("combo"):
+        checkcols([2,3,5,6,7])
         prt("self." + flds[com] + " = StringVar()")
         line = "{0} = Combobox({3}, textvariable=self.{1}{2})"
         prt(line.format(flds[var], flds[com], attribs, flds[par]))
@@ -412,6 +443,7 @@ while(True):
 
     # PROGRESSBAR
     elif flds[wgt].lower().startswith("prog"):
+        checkcols([2,3,6,7])
         line = "{0} = Progressbar({2}, orient='horizontal', mode='indeterminate', maximum=20 {1})"
         prt(line.format(flds[var], attribs, flds[par]))
         line = "{0}.grid(row={1}, column={2}{3}{4}{5})"
@@ -422,6 +454,7 @@ while(True):
 
     # NOTEBOOK
     elif flds[wgt].lower().startswith("notebook"):
+        checkcols([2,3,4,5,6,7])
         line = "{0} = Notebook({2}{1})"
         prt(line.format(flds[var], attribs, flds[par]))
         line = "tab1 = Frame({0}, width=99, height=99)  # need W & H"
@@ -442,6 +475,7 @@ while(True):
 
     # FRAMES
     elif flds[wgt].lower() == "frame":
+        checkcols([2,3,6,7])
         line = "{0} = Frame({2}{1})"
         prt(line.format(flds[var], attribs, flds[par]))
         line = "{0}.grid(row={1}, column={2}{3}{4}{5})"
@@ -458,6 +492,7 @@ while(True):
 
     # SEPARATOR
     elif flds[wgt].lower() == "separator":
+        checkcols([2,3,6,7])
         line = "{0} = Separator({2}{1})"
         prt(line.format(flds[var], attribs, flds[par]))
         line = "{0}.grid(row={1}, column={2}{3}{4}{5})\n"
@@ -550,6 +585,7 @@ while(True):
 
     # SCALE
     elif flds[wgt].lower() == "scale":
+        checkcols([2,3,5,6,7])
         prt("self." + flds[com] + " = DoubleVar()")
         line = "{0} = Scale({3}, variable=self.{1}{2})"
         prt(line.format(flds[var], flds[com], attribs, flds[par]))
@@ -575,6 +611,7 @@ while(True):
 
     # CALENDAR
     elif flds[wgt].lower() == "calendar":
+        checkcols([2,3,6,7])
         line = "self.{0} = Calendar({2}{1})"
         prt(line.format(flds[var], attribs, flds[par]))
         line = "self.{0}.grid(row={1}, column={2}{3}{4}{5})\n"
@@ -627,8 +664,12 @@ for line in fin:
 
 fout.close()
 fin.close()
-print("\n\nFind new script in 'output.py'\n")
-print("Some Widgets may need futher definition\n\n")
+print(f"\n\nFind new script in {outFile}\n")
+
+if errors is True:
+    print("Some required options missing in one or more widgets!\n\n")
+else:
+    print("Some Widgets may need futher definition\n\n")
 
 if args.exec:
     comline = "python3 " + outFile
