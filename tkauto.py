@@ -161,6 +161,8 @@ def proc_menu_item():
     ROUT += ")"
     prt(ROUT)
 
+    # END proc_menu_item
+
 '''
     Did the user request just the template?
 '''
@@ -233,7 +235,7 @@ while(True):
         domenu = True
         prt("menubar = Menu(root)")  # the menu code starts here
         rownum += 1
-        continue
+        continue  # go back to process for "domenu"
 
     # Process this row/columns values
 
@@ -587,15 +589,23 @@ while(True):
     elif flds[wgt].lower() == "scale":
         checkcols([2,3,5,6,7])
         prt("self." + flds[com] + " = DoubleVar()")
-        line = "{0} = Scale({3}, variable=self.{1}{2})"
+        line = "{0} = Scale({3}, variable=self.{1}{2}, from_=0, to=50)"
         prt(line.format(flds[var], flds[com], attribs, flds[par]))
         line = "{0}.grid(row={1}, column={2}{3}{4}{5})"
         prt(line.format(flds[var], flds[row],
                         flds[col], rowspan, colspan, sticky))
-        line = "# str(self.var.get())"
+        line = '''# OTHER OPTIONS:
+        # value=25,
+        # orient=HORIZONTAL,
+        # length=200,
+        # command=self.scale_action
+        #def scale_action(self, value):
+            ## value = self.scale.get()  # or get current value
+            # print(int(float(value)))
+        '''
         prt(line + "\n")
 
-
+    # TOPLEVEL
     elif flds[wgt].lower() == "toplevel":
         line = '''
     # def create_window(self):
@@ -608,6 +618,7 @@ while(True):
     #     tvbtn.grid(row=2, column=0, sticky='w', padx=2, pady=4)
     '''
         prt(line + "\n")
+
 
     # CALENDAR
     elif flds[wgt].lower() == "calendar":

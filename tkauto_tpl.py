@@ -3,7 +3,6 @@ code file:
 date:
 comments:
     tkauto generated
-
 '''
 from tkinter import *
 from tkinter.ttk import *  # defaults all widgets as ttk
@@ -40,7 +39,7 @@ class Application(Frame):
         # style.configure("TButton", width=10) # global
         # style.configure("my.TButton", width=10) # 'style' option
 
-        ''' ONLY OPTIONS FOR 'grid' FUNCTIONS:
+        ''' ONLY OPTIONS FOR 'grid':
                 column  row
                 columnspan  rowspan
                 ipadx and ipady
@@ -71,7 +70,8 @@ class Application(Frame):
 # 'arc', 'scidgrey', 'scidpurple', 'clam', 'smog'
 # 'kroc', 'black', 'clearlooks'
 # 'radiance', 'blue' : https://wiki.tcl-lang.org/page/List+of+ttk+Themes
-root = ThemedTk(theme="scidmint")
+# for Windows "light" use "vista"
+root = ThemedTk(theme="radiance")
 
 # change working directory to path for this file
 p = os.path.realpath(__file__)
@@ -86,7 +86,7 @@ os.chdir(os.path.dirname(p))
 #     root.geometry("400x300") # WxH+left+top
 
 
-root.title("Tkinter Demo")
+root.title("Tkinter Temp")
 # root.protocol("WM_DELETE_WINDOW", save_location)  # UNCOMMENT TO SAVE GEOMETRY INFO
 # Sizegrip(root).place(rely=1.0, relx=1.0, x=0, y=0, anchor=SE)
 # root.resizable(0, 0) # no resize & removes maximize button

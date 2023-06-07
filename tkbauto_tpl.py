@@ -60,7 +60,7 @@ os.chdir(os.path.dirname(p))
 # 'sandstone', 'yeti', 'pulse', 'united', 'morph',
 # 'journal', 'darkly', 'superhero', 'solar', 'cyborg',
 # 'vapor', 'simplex', 'cerculean'
-root = Window("template", "superhero")
+root = Window("template", "superhero", size=(400, 400))
 
 # UNCOMMENT THE FOLLOWING TO SAVE GEOMETRY INFO
 # def save_location(e=None):

@@ -17,7 +17,7 @@ class Application(Frame):
         ''' creates GUI for app '''
         tms = root.style.theme_names()
         print(tms)
-
+        root.destroy()
 
 root = Window("themes", "superhero", size=(400,300))
 
