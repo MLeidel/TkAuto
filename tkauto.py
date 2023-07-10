@@ -214,6 +214,10 @@ while(True):
     if sheet.cell(row=rownum, column=1).value is None:
         break
 
+    if sheet.cell(row=rownum, column=1).value == "#":
+        rownum += 1  # increment row for loop
+        continue
+
     flds.clear()  # clear list
     flds.append("nop")  # zero element not used
 
@@ -254,26 +258,29 @@ while(True):
         line = "{0} = Button({4}, text='{1}', command=self.{2}{3})"
         prt(line.format(flds[var], flds[txt], flds[com], attribs, flds[par]))
         callbacks.append(flds[com])
-        line = "{0}.grid(row={1}, column={2}{3}{4}{5})\n"
+        line = "{0}.grid(row={1}, column={2}{3}{4}{5}, padx=4, pady=4)\n"
         prt(line.format(flds[var], flds[row],
                         flds[col], rowspan, colspan, sticky))
 
     # LABEL
     elif flds[wgt].lower() == "label":
-        checkcols([2,3,5,6,7])
+        checkcols([2,3,6,7])
         if flds[com] != "":  # a StringVar was given
             prt("self." + flds[com] + " = StringVar()")
-            line = "{0} = Label({4}, text='{1}', textvariable=self.{2}{3})"
-            prt(line.format(flds[var], flds[txt], flds[com], attribs, flds[par]))
-            line = "{0}.grid(row={1}, column={2}{3}{4}{5})"
+
+            line = "{0} = Label({3}, textvariable=self.{1}{2})"
+            prt(line.format(flds[var], flds[com], attribs, flds[par]))
+
+            line = "{0}.grid(row={1}, column={2}{3}{4}{5}, padx=4, pady=4)"
             prt(line.format(flds[var], flds[row],
                             flds[col], rowspan, colspan, sticky))
+
             line = "self.{}.set('{}')\n"
             prt(line.format(flds[com], flds[txt]))
         else:  # without StringVar
             line = "{0} = Label({3}, text='{1}'{2})"
             prt(line.format(flds[var], flds[txt], attribs, flds[par]))
-            line = "{0}.grid(row={1}, column={2}{3}{4}{5})\n"
+            line = "{0}.grid(row={1}, column={2}{3}{4}{5}, padx=4, pady=4)\n"
             prt(line.format(flds[var], flds[row],
                             flds[col], rowspan, colspan, sticky))
 
@@ -284,7 +291,7 @@ while(True):
         prt("# self." + flds[com] + ".trace(\"w\", self.eventHandler)")
         line = "{0} = Entry({3}, textvariable=self.{1}{2})"
         prt(line.format(flds[var], flds[com], attribs, flds[par]))
-        line = "{0}.grid(row={1}, column={2}{3}{4}{5})\n"
+        line = "{0}.grid(row={1}, column={2}{3}{4}{5}, padx=4, pady=4)\n"
         prt(line.format(flds[var], flds[row],
                         flds[col], rowspan, colspan, sticky))
 
@@ -389,13 +396,13 @@ while(True):
         line = "self.{0}['xscrollcommand'] = self.{1}.set\n"
         prt(line.format(flds[com], flds[var]))
 
-    # CHECK BOX
+    # CHECK BOX Checkbutton
     elif flds[wgt].lower().startswith("check"):
         checkcols([2,3,4,5,6,7])
         prt("self.{0} = IntVar()".format(flds[com]))
         line = "{0} = Checkbutton({4}, variable=self.{1}, text='{2}'{3})"
         prt(line.format(flds[var], flds[com], flds[txt], attribs, flds[par]))
-        line = "{0}.grid(row={1}, column={2}{3}{4}{5})\n"
+        line = "{0}.grid(row={1}, column={2}{3}{4}{5}, padx=4, pady=4)\n"
         prt(line.format(flds[var], flds[row],
                         flds[col], rowspan, colspan, sticky))
     # RADIO BUTTON
@@ -405,7 +412,7 @@ while(True):
             " = StringVar() # USE ONE VAR PER GROUP OF BUTTONS")
         line = "{0} = Radiobutton({5}, variable=self.{1}, value='{2}', text='{2}'{4})"
         prt(line.format(flds[var], flds[com], flds[txt], flds[txt], attribs, flds[par]))
-        line = "{0}.grid(row={1}, column={2}{3}{4}{5})\n"
+        line = "{0}.grid(row={1}, column={2}{3}{4}{5}, padx=4, pady=4)\n"
         prt(line.format(flds[var], flds[row],
                         flds[col], rowspan, colspan, sticky))
     # SPIN BOX
@@ -414,7 +421,7 @@ while(True):
         prt("self." + flds[com] + " = StringVar(value=0)")
         line = "{0} = Spinbox({3}, textvariable=self.{1}, from_=0, to=10{2})"
         prt(line.format(flds[var], flds[com], attribs, flds[par]))
-        line = "{0}.grid(row={1}, column={2}{3}{4}{5})\n"
+        line = "{0}.grid(row={1}, column={2}{3}{4}{5}, padx=4, pady=4)\n"
         prt(line.format(flds[var], flds[row],
                         flds[col], rowspan, colspan, sticky))
     # OPTION MENU
@@ -425,7 +432,7 @@ while(True):
         prt("self." + flds[com] + ".set(optionlist[0])")
         line = "{0} = OptionMenu({2}, self.{1}, *optionlist)"
         prt(line.format(flds[var], flds[com], flds[par]))
-        line = "{0}.grid(row={1}, column={2}{3}{4}{5})\n"
+        line = "{0}.grid(row={1}, column={2}{3}{4}{5}, padx=4, pady=4)\n"
         prt(line.format(flds[var], flds[row],
                         flds[col], rowspan, colspan, sticky))
 
@@ -439,7 +446,7 @@ while(True):
         prt(line.format(flds[var]))
         prt("# COMBO.bind('<<ComboboxSelected>>', self.ONCOMBOSELECT)")
         prt("%s.current(0)" % flds[var])
-        line = "{0}.grid(row={1}, column={2}{3}{4}{5})\n"
+        line = "{0}.grid(row={1}, column={2}{3}{4}{5}, padx=4, pady=4)\n"
         prt(line.format(flds[var], flds[row],
                         flds[col], rowspan, colspan, sticky))
 
