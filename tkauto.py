@@ -20,6 +20,8 @@ import os
 import sys
 import argparse
 import openpyxl
+import ezodf
+
 
 outFile = "output.py"  # default output file name
 
@@ -36,7 +38,7 @@ parser.add_argument('-t', dest='template', action='store_true',
                     help='Output just the template - layout="nofile"')
 parser.add_argument('-b', dest='bstrap', action='store_true',
                     help='Use ttkbootstrap template: tkbauto_tpl.py')
-parser.add_argument('filename', help='Excel or "nofile" for -t option')
+parser.add_argument('filename', help='.xls_ | .odf, or "nofile" for -t option')
 args = parser.parse_args()
 
 # list (flds) index names for the (row)column values
@@ -186,48 +188,83 @@ if args.template:
 
 
 # verify the input xlsx file
+filetype = ""  # .xls? or .ods
+
 if os.path.exists(args.filename):
-    if not args.filename.endswith("xlsx"):
-        print("must be an Excel (xlsx) file.")
+    if args.filename[-4:-1] == "xls":
+        filetype = "xls"
+    elif args.filename.endswith(".ods"):
+        filetype = "odf"
+    else:
+        print("file missing or incorrect type: " + args.filename)
         sys.exit()
-else:
-    print("cannot find file: " + args.filename)
-    sys.exit()
 
 '''
-    Get the Excel workbook and spreadsheet.
-    The Excel file is expected to be in the app's directory.
+    Get the workbook and spreadsheet.
 '''
-wb = openpyxl.load_workbook(args.filename)
-# sheet = wb.get_sheet_by_name('layout')  # Must be a Sheet titled 'layout' !
-sheet = wb.worksheets[0]  # first worksheet in the workbook
+if filetype == "xls":
+    wb = openpyxl.load_workbook(args.filename)
+    # sheet = wb.get_sheet_by_name('layout')  # Must be a Sheet titled 'layout' !
+    sheet = wb.worksheets[0]  # first worksheet in the workbook
+    rownum = 3
+else:  # its .odf file
+    wb = ezodf.opendoc(args.filename)
+    sheet = wb.sheets[0]
+    rownum = 2  # ezodf index 0 based
+
 flds = []
 callbacks = []
 domenu = False
 
 #
-rownum = 3
+
 print("TkAuto Starting -------------------------------------->")
 
 while(True):
-    # nothing in col 1 end the loop
-    if sheet.cell(row=rownum, column=1).value is None:
-        break
+    # nothing in col 1 end the loop (very big loop)
 
-    if sheet.cell(row=rownum, column=1).value == "#":
-        rownum += 1  # increment row for loop
-        continue
+    if filetype == "xls":  # using an Excel file
 
-    flds.clear()  # clear list
-    flds.append("nop")  # zero element not used
+        if sheet.cell(row=rownum, column=1).value is None:
+            break
 
-    # load up the flds list with this row's columns values
-    for c in range(1, 12):  # columns align with list index
-        val = sheet.cell(row=rownum, column=c).value
-        if val is None:
-            flds.append("")
-        else:
-            flds.append(val)
+        if sheet.cell(row=rownum, column=1).value == "#":
+            rownum += 1  # increment row for loop
+            continue
+
+        flds.clear()  # clear list
+        flds.append("nop")  # zero element not used
+
+        # load up the flds list with this row's columns values
+        for c in range(1, 12):  # columns align with list index
+            val = sheet.cell(row=rownum, column=c).value
+            if val is None:
+                flds.append("")
+            else:
+                flds.append(val)
+
+    else:  # using an .ods file
+
+        if sheet[rownum, 0].value is None:
+            break
+        if sheet[rownum, 0].value == "#":
+            rownum += 1  # increment row for loop
+            continue
+
+        flds.clear()  # clear list
+        flds.append("nop")  # zero element not used
+
+        # load up the flds list with this row's columns values
+        for c in range(0, 11):  # Note .ods is 0 base indexing
+            val = sheet[rownum, c].value
+            if c > 4 and c < 9:  # numbers are float values for .ods
+                if val is not None:  # they are blank for some widgets
+                    val = int(val)
+            if val is None:
+                flds.append("")
+            else:
+                flds.append(val)
+
 
     # first check if processing menu
     if domenu is True:

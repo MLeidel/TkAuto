@@ -1,20 +1,23 @@
 # tkauto
 
 ## Now generates code for ttkthemed and ttkbootstrap
+## Can use ether .xlsx, .xlsm or .ods input spreadsheets
 
 ![drawing](images/tkauto_draw_3000.jpg "title")
 Laying out tkinter widgets using  
 a grid and spreadsheet
 ![draw](images/tkauto_layout.png "title")
 
+![app final](images/tkauto_app.png "final app")
+
 tkauto inputs an xlsx (excel) file and outputs a starter script 
 for a Python GUI desktop application. 
 
 The Python script will use 
 tkinter, ttk, and _ttkthemed_ or _ttkbootstrap_ for the GUI API.
-<br>
 
-![app final](images/tkauto_app.png "final app")
+Comes with Excel VBA and LibreOffice Basic macros which you can paste into
+your workbooks to assist in setting up the spreadsheet rows, if you desire.
 
 ---
 
