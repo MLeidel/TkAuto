@@ -19,6 +19,8 @@ tkinter, ttk, and _ttkthemed_ or _ttkbootstrap_ for the GUI API.
 Comes with Excel VBA and LibreOffice Basic macros which you can paste into
 your workbooks to assist in setting up the spreadsheet rows, if you desire.
 
+### Video of creation process: https://youtu.be/muCgW5_dDH8
+
 ---
 
 ## Text Editor App
