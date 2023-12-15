@@ -93,6 +93,7 @@ root.title("Tkinter Temp")
 # root.minsize(w, h)  # width, height
 # root.maxsize(w, h)
 # root.overrideredirect(True) # removed window decorations
+# root.attributes('-type', 'splash')  # don't show in taskbar
 # root.iconphoto(False, PhotoImage(file='icon.png'))
 # root.attributes("-topmost", True)  # Keep on top of other windows
 app = Application(root)

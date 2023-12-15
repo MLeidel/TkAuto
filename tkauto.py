@@ -3,12 +3,12 @@ tkauto.py
 Python console program
 Author: Michael Leidel
 Description:
-Builds a Python tkinter application shell from an xlsx file.
+Builds Python tkinter starter code from an xlsx file.
 
 usage: tkauto.py [-h] [-x] [-t] [-b] filename
 
 positional arguments:
-  filename    Excel or "nofile" for -t option
+    filename    Excel or "nofile" for -t option
 
 options:
   -h, --help  show this help message and exit
@@ -20,8 +20,6 @@ import os
 import sys
 import argparse
 import openpyxl
-import ezodf
-
 
 outFile = "output.py"  # default output file name
 
@@ -93,7 +91,7 @@ def getAttrib(val):
     return atts
 
 def checkcols(fields):
-    ''' check for required values in the layout spreadsheet columns
+    ''' check input for required values in the spreadsheet columns
         each widget will have different required options '''
     global errors
     for item in fields:
@@ -190,27 +188,16 @@ if args.template:
 # verify the input xlsx file
 filetype = ""  # .xls? or .ods
 
-if os.path.exists(args.filename):
-    if args.filename[-4:-1] == "xls":
-        filetype = "xls"
-    elif args.filename.endswith(".ods"):
-        filetype = "odf"
-    else:
-        print("file missing or incorrect type: " + args.filename)
-        sys.exit()
-
+if not os.path.exists(args.filename) or not args.filename.endswith(".xlsx"):
+    print("xlsx file missing or incorrect type: " + args.filename)
+    sys.exit()
 '''
     Get the workbook and spreadsheet.
 '''
-if filetype == "xls":
-    wb = openpyxl.load_workbook(args.filename)
-    # sheet = wb.get_sheet_by_name('layout')  # Must be a Sheet titled 'layout' !
-    sheet = wb.worksheets[0]  # first worksheet in the workbook
-    rownum = 3
-else:  # its .odf file
-    wb = ezodf.opendoc(args.filename)
-    sheet = wb.sheets[0]
-    rownum = 2  # ezodf index 0 based
+wb = openpyxl.load_workbook(args.filename)
+# sheet = wb.get_sheet_by_name('layout')  # Must be a Sheet titled 'layout' !
+sheet = wb.worksheets[0]  # first worksheet in the workbook
+rownum = 3
 
 flds = []
 callbacks = []
@@ -221,50 +208,25 @@ domenu = False
 print("TkAuto Starting -------------------------------------->")
 
 while(True):
-    # nothing in col 1 end the loop (very big loop)
 
-    if filetype == "xls":  # using an Excel file
+    # EOF: nothing in col 1 end the loop (very big loop)
+    if sheet.cell(row=rownum, column=1).value is None:
+        break
 
-        if sheet.cell(row=rownum, column=1).value is None:
-            break
+    if sheet.cell(row=rownum, column=1).value == "#":
+        rownum += 1  # comments: increment row for loop
+        continue
 
-        if sheet.cell(row=rownum, column=1).value == "#":
-            rownum += 1  # increment row for loop
-            continue
+    flds.clear()  # clear list
+    flds.append("nop")  # zero element not used
 
-        flds.clear()  # clear list
-        flds.append("nop")  # zero element not used
-
-        # load up the flds list with this row's columns values
-        for c in range(1, 12):  # columns align with list index
-            val = sheet.cell(row=rownum, column=c).value
-            if val is None:
-                flds.append("")
-            else:
-                flds.append(val)
-
-    else:  # using an .ods file
-
-        if sheet[rownum, 0].value is None:
-            break
-        if sheet[rownum, 0].value == "#":
-            rownum += 1  # increment row for loop
-            continue
-
-        flds.clear()  # clear list
-        flds.append("nop")  # zero element not used
-
-        # load up the flds list with this row's columns values
-        for c in range(0, 11):  # Note .ods is 0 base indexing
-            val = sheet[rownum, c].value
-            if c > 4 and c < 9:  # numbers are float values for .ods
-                if val is not None:  # they are blank for some widgets
-                    val = int(val)
-            if val is None:
-                flds.append("")
-            else:
-                flds.append(val)
-
+    # load up the flds list with this row's columns values
+    for c in range(1, 12):  # columns align with list index
+        val = sheet.cell(row=rownum, column=c).value
+        if val is None:
+            flds.append("")
+        else:
+            flds.append(val)
 
     # first check if processing menu
     if domenu is True:

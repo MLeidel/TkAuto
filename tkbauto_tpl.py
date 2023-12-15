@@ -84,6 +84,7 @@ Sizegrip(root).place(rely=1.0, relx=1.0, x=0, y=0, anchor='se')
 # root.minsize(w, h)  # width, height
 # root.maxsize(w, h)
 # root.overrideredirect(True) # removed window decorations
+# root.attributes('-type', 'splash')  # don't show in taskbar
 # root.iconphoto(False, PhotoImage(file='icon.png'))
 # root.attributes("-topmost", True)  # Keep on top of other windows
 

@@ -1,6 +1,5 @@
 argparse
 openpyxl
-ezodf
 tkcalendar
 pyperclip
 ttkbootstrap
