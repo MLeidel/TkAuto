@@ -1,16 +1,28 @@
 # tkauto
 
-## Generates code for ttkthemed and ttkbootstrap
+## Generates Python/tkinter code for GUIs 
 
-![drawing](images/tkauto_draw_3000.jpg "title")
-Laying out tkinter widgets using  
-a grid and spreadsheet
+__Will generate staight tkinter, ttkthemed, or ttkbootstrap styles__
+
+Design a grid GUI on paper.  
+Then open the included Excel template to quickly fill in the widget layout.
+
+![drawing](images/mockup.png "title")
+
+Laying out tkinter widgets in Excel:
+
 ![draw](images/tkauto_layout.png "title")
 
 ![app final](images/tkauto_app.png "final app")
 
 tkauto inputs an xlsx (excel) file and outputs starter code 
 for a Python GUI desktop application. 
+
+```bash
+$ python tkauto.py layout.xlsx
+$ python output.py
+
+```
 
 The Python script will use 
 tkinter, ttk, and _ttkthemed_ or _ttkbootstrap_ for the GUI API.
@@ -28,7 +40,7 @@ starting point for menus.
 Spreadsheet template:
 - __layout\_tpl.xlsx__
 
-## Generate ttk tkinter starter script
+## Generating the starter script
 
 ```python
 usage: tkauto.py [-h] [-x] [-t] [-b] filename
@@ -45,9 +57,9 @@ options:
   -b          Use ttkbootstrap template: tkbauto_tpl.py
 
 ```
-Example:
+Example (will create `output.py`):
 
-```python
+```bash
     python3 tkauto.py my_layout.xlsx
 ```
 ---
